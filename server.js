@@ -8,7 +8,7 @@ import uuidv4 from 'uuid/v4'
 import models, { connectDb } from './models';
 import routes from './routes';
 
-const port = process.env.SERVER_PORT || 5000;
+const port = process.env.PORT || process.env.SERVER_PORT || 5000;
 const app = express();
 
 app.use(cookieParser());
