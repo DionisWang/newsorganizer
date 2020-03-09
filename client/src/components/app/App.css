@@ -1,0 +1,42 @@
+#root {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: min-content repeat(2, min-content);
+  grid-template-areas: "Navbar"
+                       "News"
+                       "Timeline"
+}
+.navbar{
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: min-content minmax(min-content,1fr) min-content;
+  grid-gap: 10px;
+  grid-area: Navbar;
+}
+.navbar form{
+  min-width: 200px;
+  max-width: 300px;
+}
+#News{
+  grid-area: News;
+}
+.carousel.slide{
+  display: grid;
+  grid-template-columns: 50px 1fr 50px;
+}
+.carousel.slide .carousel-inner{
+  grid-column: 2;
+}
+.carousel.slide .carousel-control-next{
+  width: 50px;
+}
+.carousel.slide .carousel-control-prev{
+  width: 50px;
+}
+.active.carousel-item #news{
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+}
+#Timeline{
+  grid-area: Timeline;
+}

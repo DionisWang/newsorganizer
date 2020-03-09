@@ -1,0 +1,161 @@
+
+h1{
+  text-align: center;
+  font-size: calc(16px + (32 - 16) * ((100vw - 300px) / (1600 - 300)));
+}
+p{
+  font-size: calc(12px + (20 - 12) * ((100vw - 300px) / (1600 - 300)));
+}
+.nav-link{
+  text-align: right;
+  font-size: calc(16px + (24 - 16) * ((100vw - 300px) / (1600 - 300)));
+}
+.navbar-brand{
+  font-size: calc(16px + (24 - 16) * ((100vw - 300px) / (1600 - 300)));
+}
+.nav-item{
+  text-align: right;
+}
+.form-control.col-10{
+  height: calc(32px + (52 - 32) * ((100vw - 300px) / (1600 - 300)));
+  max-width: 18vw;
+  font-size: calc(24px + (26 - 24) * ((100vw - 300px) / (1600 - 300)));
+  margin-left: auto;
+}
+.p2.text-muted{
+  font-size: calc(12px + (16 - 12) * ((100vw - 300px) / (1600 - 300)));
+}
+.search-icon{
+  height: 100%;
+  display: block;
+  margin-left:auto;
+  margin-right:auto;
+}
+.btn.btn-dark.col{
+  display: block;
+  height: calc(28px + (28 - 16) * ((100vw - 300px) / (1600 - 300)));
+  width: calc(28px + (28 - 16) * ((100vw - 300px) / (1600 - 300)));
+  max-width: 56px;
+  min-width: 40px;
+}
+.map{
+  text-align: center;
+}
+.hidden{
+  display: none;
+}
+.pin-h1{
+  font-size: 1vw;
+
+}
+.pin{
+  max-width: 10vw;
+}
+.pin-img{
+  width:15vw;
+  height:auto;
+}
+.pin-p{
+  font-size:.75vw;
+
+}
+.abcRioButtonIcon{
+  padding: 5px;
+}
+@media (max-width: 768px){
+   .form-control.col-10 {
+       margin-right: auto;
+       margin-right: 0;
+   }
+   .btn.btn-dark.col{
+     margin-right: auto;
+   }
+}
+.Login {
+  padding: 60px 0;
+}
+
+.Login form {
+  margin: 0 auto;
+  max-width: 320px;
+}
+.Signup {
+  padding: 60px 0;
+}
+
+.Signup form {
+  margin: 0 auto;
+  max-width: 320px;
+}
+
+.Signup form span.help-block {
+font-size: 14px;
+padding-bottom: 10px;
+color: #999;
+}
+.Login p {
+  text-align: center;
+}
+.profile p {
+  text-align: center;
+}
+.Logout p {
+  text-align: center;
+}
+.Signup p{
+  text-align: center;
+}
+.carousel-control-next,
+.carousel-control-prev,
+.carousel-indicators{
+    filter: invert(100%);
+}
+.card:hover{
+  box-shadow:5px 10px 20px 1px rgba(0,0,0,0.253)!important;
+}
+#news-inner{
+  width:100%;
+}
+#cards{
+  width: 100%;
+}
+.card a p{
+  width:100%;
+  font-size: calc(14px + (18 - 14) * ((100vw - 300px) / (1600 - 300)));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card-link img{
+  width: 100%;
+  height: auto;
+  max-height: 250px;
+  object-fit: cover;
+}
+.card-link{
+  overflow: hidden;
+}
+.card-text button{
+background: none!important;
+  border: none;
+  padding: 0!important;
+  color: rgb(56, 76, 87);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.dropdown-item{
+  text-align: right;
+}
+.noUi-horizontal .noUi-tooltip{
+  display: none;
+}
+.noUi-active .noUi-tooltip {
+  display: block;
+}
+.map-list{
+  display:flex;
+  justify-content:center;
+}
+.About p{
+  text-align:center;
+}
