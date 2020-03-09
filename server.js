@@ -8,7 +8,7 @@ import uuidv4 from 'uuid/v4'
 import models, { connectDb } from './models';
 import routes from './routes';
 
-
+const port = process.env.SERVER_PORT || 5000;
 const app = express();
 
 app.use(cookieParser());
@@ -72,7 +72,6 @@ app.get('/api', (req, res) => {
 
 if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
   // Add production middleware such as redirecting to https
-  console.log(process.env.NODE_ENV)
   // Express will serve up production assets i.e. main.js
   app.use(express.static(__dirname + '/client/build'));
   // If Express doesn't recognize route serve index.html
@@ -99,7 +98,7 @@ connectDb().then(async () => {
     */
     
     setInterval(function(){updateNews();},300000);
-    app.listen(process.env.SERVER_PORT, () => console.log(`Gator app listening on port ${process.env.SERVER_PORT}!`));
+    app.listen(port, () => console.log(`Gator app listening on port ${port}!`));
 });
 
 const updateNews= async () =>{
