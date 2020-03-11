@@ -60,8 +60,9 @@ class GoogleMap extends Component {
             maxZoom: 15,
             mapTypeControl: false,
             streetViewControl: false,
-            fullscreenControl: false,
+            fullscreenControl: true,
             disableDoubleClickZoom: true,
+            gestureHandling: 'greedy',
         })
         //let that=this;
         map.addListener("bounds_changed",this.checkbounds.bind(this));
