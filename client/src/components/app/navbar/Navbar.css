@@ -10,6 +10,9 @@
 .dropdown-menu{
   min-width: 5rem;
 }
+.dropdown-item{
+  text-align: right;
+}
 h1{
   text-align: center;
   font-size: calc(16px + (32 - 16) * ((100vw - 300px) / (1600 - 300)));
@@ -55,38 +58,48 @@ p{
 .hidden{
   display: none;
 }
-.pin-h1{
-  font-size: 1vw;
 
-}
-.pin{
-  max-width: 10vw;
-}
-.pin-img{
-  width:15vw;
+.pin {
+  max-width: 220px;
   height:auto;
 }
-.pin-p{
-  font-size:.75vw;
-
+.pin h1{
+ font-size: calc(18px + (18 - 16) * ((100vw - 300px) / (1600 - 300)));
+}
+.pin p{
+  font-size: calc(16px + (16 - 14) * ((100vw - 300px) / (1600 - 300)));
 }
 .abcRioButtonIcon{
   padding: 5px;
 }
 @media (min-width: 768px){
-   .searchbar{
-      display: flex;
-      justify-content: center;
-   }
-   .searchbar form{
-      flex-grow: 1;
-      max-width: 50%;
-   }
+  .searchbar{
+    display: flex;
+    justify-content: center;
+  }
+  .searchbar form{
+    flex-grow: 1;
+    max-width: 50%;
+  }
+  .pin{
+  max-width: 13vw;
+  }
+  .pin h1{
+    font-size: 1.25vw;
+  
+  }
+  .pin p{
+    font-size:1vw;
+  
+  }
+   
 }
 .Login {
   padding: 60px 0;
 }
-
+.Login p {
+  text-align: center;
+}
 .Login form {
   margin: 0 auto;
   max-width: 320px;
@@ -105,7 +118,7 @@ font-size: 14px;
 padding-bottom: 10px;
 color: #999;
 }
-.Login p {
+.Signup p{
   text-align: center;
 }
 .profile p {
@@ -114,9 +127,7 @@ color: #999;
 .Logout p {
   text-align: center;
 }
-.Signup p{
-  text-align: center;
-}
+
 .carousel-control-next,
 .carousel-control-prev,
 .carousel-indicators{
@@ -125,11 +136,11 @@ color: #999;
 .card:hover{
   box-shadow:5px 10px 20px 1px rgba(0,0,0,0.253)!important;
 }
-#news-inner{
-  width:100%;
-}
 #cards{
   width: 100%;
+}
+#news-inner{
+  width:100%;
 }
 .card a p{
   width:100%;
@@ -155,9 +166,7 @@ background: none!important;
   text-decoration: underline;
   cursor: pointer;
 }
-.dropdown-item{
-  text-align: right;
-}
+
 .noUi-horizontal .noUi-tooltip{
   display: none;
 }
