@@ -17,7 +17,8 @@ export default function SearchBar() {
     }
 
     return (
-        <Form onSubmit={e=>handleSubmit(e)} className="my-auto w-50">
+        <div className="searchbar">
+        <Form onSubmit={e=>handleSubmit(e)} className="my-auto">
         <InputGroup>
             <FormControl type="text" placeholder="Search" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
             <InputGroup.Append>
@@ -27,5 +28,6 @@ export default function SearchBar() {
             </InputGroup.Append>
         </InputGroup>
         </Form>
+        </div>
     )
 }

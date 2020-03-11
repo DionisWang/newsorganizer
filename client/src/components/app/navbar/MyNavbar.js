@@ -20,7 +20,7 @@ export default function MyNavbar(){
     }
     return(
         <Navbar collapseOnSelect expand="md" bg="dark" variant="dark" sticky="top">
-            <Navbar.Brand className = "d-flex flex-grow-1" href="/">News Organizer</Navbar.Brand>
+            <Navbar.Brand href="/">News Organizer</Navbar.Brand>
             <SearchBar/>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">

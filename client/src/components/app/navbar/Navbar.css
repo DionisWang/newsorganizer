@@ -1,4 +1,15 @@
-
+.navbar{
+  width: 100%;
+  display: inline-grid;
+  grid-template-columns: min-content minmax(min-content,1fr) min-content;
+  grid-column-gap: 5px;
+}
+#responsive-navbar-nav{
+  grid-column-start: 3;
+}
+.dropdown-menu{
+  min-width: 5rem;
+}
 h1{
   text-align: center;
   font-size: calc(16px + (32 - 16) * ((100vw - 300px) / (1600 - 300)));
@@ -62,13 +73,14 @@ p{
 .abcRioButtonIcon{
   padding: 5px;
 }
-@media (max-width: 768px){
-   .form-control.col-10 {
-       margin-right: auto;
-       margin-right: 0;
+@media (min-width: 768px){
+   .searchbar{
+      display: flex;
+      justify-content: center;
    }
-   .btn.btn-dark.col{
-     margin-right: auto;
+   .searchbar form{
+      flex-grow: 1;
+      max-width: 50%;
    }
 }
 .Login {
