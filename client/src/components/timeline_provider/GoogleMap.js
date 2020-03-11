@@ -26,12 +26,12 @@ class GoogleMap extends Component {
     }
     componentDidMount() {
         this.googleMap = this.createGoogleMap();
-        this.nlist=this.context[0].maps[this.state.current].data||[];
     };
     componentWillUnmount(){
         this.shown={};
     }
     loadmarks(map_num){
+        this.nlist=this.context[0].maps[map_num||this.state.current].data||[];
         let {shown,nlist}=this;
         //let c=0;
         nlist.forEach((info)=>{
@@ -124,22 +124,23 @@ class GoogleMap extends Component {
         this.context[1](this.context[0],{isLoaded:false});
     }
     handleCurrent(e){
-        for(let id in this.shown){
-            this.shown[id].setMap(null);
-        }
-        this.shown={};
-        this.nlist=this.context[0].maps[e].data||[];
-        let controlDiv = document.createElement('div');
-        controlDiv.index = 1;
-        ReactDOM.render(<GoogleMapSaveButton 
-                user={(this.context[0].user)? true:false} 
-                handleSave={this.handleSave.bind(this)}
-                baseName={this.context[0].maps[this.state.current].name}
-            />
-        ,controlDiv);
-        this.googleMap.controls[gmap.ControlPosition.TOP_RIGHT].pop();
-        this.googleMap.controls[gmap.ControlPosition.TOP_RIGHT].push(controlDiv);
-        this.setState({current:e});
+        this.setState({current:e},()=>{
+            for(let id in this.shown){
+                this.shown[id].setMap(null);
+            }
+            this.shown={};
+            this.loadmarks();
+            let controlDiv = document.createElement('div');
+            controlDiv.index = 1;
+            ReactDOM.render(<GoogleMapSaveButton 
+                    user={(this.context[0].user)? true:false} 
+                    handleSave={this.handleSave.bind(this)}
+                    baseName={this.context[0].maps[this.state.current].name}
+                />
+            ,controlDiv);
+            this.googleMap.controls[gmap.ControlPosition.TOP_RIGHT].pop();
+            this.googleMap.controls[gmap.ControlPosition.TOP_RIGHT].push(controlDiv);
+        });
     }
     componentDidUpdate(){
         this.loadmarks();
