@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Card, Button, Carousel, Tooltip, OverlayTrigger } from "react-bootstrap";
 import LongText from './LongText';
 import {Context} from '../hooks/UserProfile';
+import AlertPopup from '../AlertPopup';
+
 
 class Background extends Component{
     static contextType= Context;
@@ -41,25 +43,27 @@ class Background extends Component{
             cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
             credentials: 'same-origin', // include, *same-origin, omit
             referrerPolicy: 'no-referrer', // no-referrer, *client
-          });
-        const body = await response.json();
-        if (response.status !== 200){
-            throw Error(body.message);
-        }
-        if(body.articles.length===0){
-            window.removeEventListener("scroll", this.handleScroll);
-        }else if(body.articles.length<per){
-            this.setState({
-                news: this.removeDupMerge(news,body.articles),
-                scrolling: false,
-                offset: per-body.articles.length,
-            });
-        }else{
-            this.setState({
-                news: this.removeDupMerge(news,body.articles),
-                scrolling: false,
-            });
-        }
+        });
+        try{
+            const body = await response.json();
+            if (response.status !== 200){
+                throw Error(body.message);
+            }
+            if(body.articles.length===0){
+                window.removeEventListener("scroll", this.handleScroll);
+            }else if(body.articles.length<per){
+                this.setState({
+                    news: this.removeDupMerge(news,body.articles),
+                    scrolling: false,
+                    offset: per-body.articles.length,
+                });
+            }else{
+                this.setState({
+                    news: this.removeDupMerge(news,body.articles),
+                    scrolling: false,
+                });
+            }
+        }catch{}
     };
     removeDupMerge(a1,a2) {
         let exists = {};
@@ -190,14 +194,16 @@ class Background extends Component{
                     <div className="d-flex flex-wrap mx-1">
                         {content}
                     </div>
+                    {(this.context[0].error)? <AlertPopup title={"Server Error!"} body={this.context[0].error} variant={"danger"}/>:null}
                 </div>
             )
         }else if(this.formatting===1){
             return (
-                <div id="news-inner" style={{width:this.props.size*.9+"px",height:"475px",marginLeft:"auto",marginRight:"auto",overflow:"hidden"}}>
+                <div id="news-inner" style={{width:this.props.size*.9+"px",height:"auto",marginLeft:"auto",marginRight:"auto",overflow:"hidden"}}>
                     <Carousel className="mx-auto" indicators={false}>
                         {content}
                     </Carousel>
+                    {(this.context[0].error)? <AlertPopup title={"Server Error!"} body={this.context[0].error} variant={"danger"}/>:null}
                 </div>
             )
         }

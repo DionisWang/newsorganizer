@@ -40,3 +40,6 @@
 #Timeline{
   grid-area: Timeline;
 }
+.spinner{
+  text-align: center;
+}

@@ -29,15 +29,17 @@ router.post('/', async (req, res) => {
             email: req.body.email,
             password: req.body.password,
             createdAt: new Date(),
-        }).then((newUser)=>{
-            console.log(`${newUser.username} has signed up with ${newUser.email} @ ${newUser.createdAt.toLocaleString()}`);
-            req.myData.message="You have sucessfully signed up!";
-            done(req,res);
-        },(err) =>{
-            console.log(`${err.name}: ${err.message}`);
-            req.myData.error= "Email Already In Use!";
-            done(req,res);
-        }).then(done(req,res));
+        },(err, newUser) =>{
+            if(err){
+                console.log(`${err.name}: ${err.message}`);
+                req.myData.error= "Email Already In Use!";
+                done(req,res);
+            }else{
+                console.log(`${newUser.username} has signed up with ${newUser.email} @ ${newUser.createdAt.toLocaleString()}`);
+                req.myData.message="You have sucessfully signed up!";
+                done(req,res);
+            }
+        });
     }else if(req.query.login===''){
         await req.context.models.User.findOne({
             email: req.body.email,
@@ -61,12 +63,12 @@ router.post('/', async (req, res) => {
                         req.myData.message="Login Successful!";
                         done(req,res);
                     }else{
-                        req.myData.error= "Login Failed: Incorrect Username/Email or Password!";
+                        req.myData.error= "Incorrect Email or Password!";
                         done(req,res);
                     }
                 });
             }else{
-                req.myData.error= "Login Failed: Incorrect Username/Email or Password!";
+                req.myData.error= "Incorrect Email or Password!";
                 done(req,res);
             }
         },(err) =>{

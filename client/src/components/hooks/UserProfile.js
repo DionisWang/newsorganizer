@@ -4,39 +4,7 @@ const reducer = (prevState, updatedProperty) => ({
     ...prevState,
     ...updatedProperty,
 });
-async function saver(timelines){
-    let savename = window.localStorage.getItem("savename");
-    window.localStorage.removeItem("savename");
-    let current = +window.localStorage.getItem("cur")||0;
-    if(!timelines[current].data){
-        alert('Nothing to save');
-        return;
-    }
-    const url = `/api/maps`;
-    fetch(url,{
-        method: 'POST', // *GET, POST, PUT, DELETE, etc.
-        mode: 'same-origin', // no-cors, *cors, same-origin
-        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: 'same-origin', // include, *same-origin, omit
-        referrerPolicy: 'no-referrer', // no-referrer, *client
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            timeline:timelines[current],
-            savename: savename,
-        }),
-    })
-    .then(res=> {
-        if(res.ok){
-            timelines[current].name=savename;
-            window.localStorage.setItem("session",JSON.stringify({timelines:timelines}));
-        }
-        return res.json()
-    }).then(body=>{
-        alert(body.message);
-    }, err =>{
-        alert(err);
-    });
-}
+
 
 function updater(promise) {
     // Don't modify any promise that has been already modified.
@@ -80,6 +48,50 @@ const initialState={
 }
 const UserProfile = ({children}) => {
     const [profile, update] = useReducer(reducer,initialState);
+    async function apiFetch(url){
+        let res = await fetch(url,{
+            method: 'GET', // *GET, POST, PUT, DELETE, etc.
+            mode: 'same-origin', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            referrerPolicy: 'no-referrer', // no-referrer, *client
+        })
+        if(res.ok){
+            return res.json();
+        }else{
+            let err;
+            try{
+                err = res.json().error
+            }catch{}
+            apiError(err||'Connection Failed!');
+        }
+    }
+    function apiError(err){
+        update({
+            user:profile.user,
+            maps:profile.maps,
+            isLoaded: true,
+            mapLoaded: true,
+            error: err||"Connection Failed!",
+        });
+    }
+
+    async function saver(timelines){
+        let savename = window.localStorage.getItem("savename");
+        window.localStorage.removeItem("savename");
+        let current = +window.localStorage.getItem("cur")||0;
+        if(!timelines[current].data){
+            apiError("Nothing to save!")
+            return;
+        }
+        const url = `/api/maps`;
+        apiFetch(url).then(body=>{
+            timelines[current].name=savename;
+            window.localStorage.setItem("session",JSON.stringify({timelines:timelines}));
+            alert(body.message);
+        }).catch(err=>{});
+    }
+    
     useEffect(()=>{
         try{
             let save = window.localStorage.getItem("save");
@@ -92,23 +104,10 @@ const UserProfile = ({children}) => {
         if(!profile.isLoaded){
             const updateUser= new Promise ((resolve,reject) =>{
                 const url = `/api/`;
-                fetch(url,{
-                    method: 'GET', // *GET, POST, PUT, DELETE, etc.
-                    mode: 'same-origin', // no-cors, *cors, same-origin
-                    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                    credentials: 'same-origin', // include, *same-origin, omit
-                    referrerPolicy: 'no-referrer', // no-referrer, *client
-                })
-                .then(res=> res.json())
-                .then(body=>{
-                    if(body.info.anon===false){
-                        resolve(body.info);
-                    }else{
-                        resolve(null);
-                    }
-                }, err =>{
-                    reject(err);
-                });
+                apiFetch(url).then(body=>{
+                    if(!body){return}
+                    (body.info.anon===false)? resolve(body.info):resolve(null);
+                }).catch(err=>{reject(err)});
             });
             let get_user= updater(updateUser);
             let checker = setInterval(()=>{
@@ -129,19 +128,9 @@ const UserProfile = ({children}) => {
             if(profile.user!==null&& !profile.mapLoaded){
                 const getTimeline= new Promise ((resolve,reject) =>{
                     const url = `/api/maps`;
-                    fetch(url,{
-                        method: 'GET', // *GET, POST, PUT, DELETE, etc.
-                        mode: 'same-origin', // no-cors, *cors, same-origin
-                        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                        credentials: 'same-origin', // include, *same-origin, omit
-                        referrerPolicy: 'no-referrer', // no-referrer, *client
-                    })
-                    .then(res=> res.json())
-                    .then(body=>{
+                    apiFetch(url).then(body=>{
                         resolve(body.timelines);
-                    }, err =>{
-                        reject(err);
-                    });
+                    }).catch(err=>{reject(err)});
                 });
                 let user_maps=updater(getTimeline);
                 let checker = setInterval(()=>{

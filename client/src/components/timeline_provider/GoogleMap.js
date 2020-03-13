@@ -4,16 +4,18 @@ import Nouislider from 'react-nouislider';
 
 import {Context} from '../hooks/UserProfile';
 import GoogleMapSaveButton from './GoogleMapSaveButton';
-import MapList from '../map_list/MapList'
+import MapList from '../map_list/MapList';
+import AlertPopup from '../AlertPopup';
 import './nouislider.css';
 
+let gmap=null;
 if(!window.google){
-    alert("Google Maps connection error!");
-}
-const gmap= window.google.maps;
-gmap.InfoWindow.prototype.isOpen = function(){
-    var map = this.getMap();
-    return (map !== null && typeof map !== "undefined");
+}else{
+    gmap= window.google.maps;
+    gmap.InfoWindow.prototype.isOpen = function(){
+        var map = this.getMap();
+        return (map !== null && typeof map !== "undefined");
+    }
 }
 //journal(database), hashtags, multiple timelines, search bar in the middle,
 class GoogleMap extends Component {
@@ -207,11 +209,11 @@ class GoogleMap extends Component {
         return (
         <div style={{width: this.props.width, height: this.props.height, display:"inline-block"}}>
             <MapList cstUpdate={this.handleCurrent.bind(this)}></MapList>
-            <div
+            {(gmap)? <div
                 id="google-map"
                 ref={this.googleMapRef}
                 style={{width: this.props.width, height: this.props.height, display:"inline-block"}}
-            />
+            />: <AlertPopup variant="danger" title="Failed to load GoogleMap" body="Could not download GoogleMap"/>}
             <p/>
             {this.loadDateFilter()} 
         </div>

@@ -1,33 +1,29 @@
-import React, { useState } from "react";
-import {Alert, Button, FormGroup, FormControl, FormLabel, Form, Spinner} from "react-bootstrap";
+import React, { useState, useContext } from "react";
+import { Button, FormGroup, FormControl, FormLabel, Form, Spinner} from "react-bootstrap";
+import {Context} from '../../components/hooks/UserProfile';
+import AlertPopup from '../../components/AlertPopup';
+import { useHistory } from "react-router";
+
+
 
 export default function Signup(props) {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [confirmationCode, setConfirmationCode] = useState("");
+    //const [confirmationCode, setConfirmationCode] = useState("");
     const [newUser, setNewUser] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-
-    function validateForm() {
-        return (
-            username.length>0 &&
-            email.length > 0 &&
-            password.length > 0 &&
-            password === confirmPassword
-        );
-    }
-
-    function validateConfirmationForm() {
-        return confirmationCode.length > 0;
-    }
+    const [alert, setAlert]= useState(null);
+    const [profile] = useContext(Context);
+    let history = useHistory();
 
     async function handleSubmit(event) {
         event.preventDefault();
+        setAlert(null);
         const url = `/api/users?signup`;
         setIsLoading(true);
-        fetch(url, {
+        let res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -35,22 +31,41 @@ export default function Signup(props) {
                 email: email,
                 password:password,
             }),
-        }).then(async (res)=>{
-            let body = await res.json();
-            if(res.ok){
-                console.log(body);
-                setNewUser(body.username);
-            }else{
-                if (res.status !== 200){
-                    alert(body.error);
-                }
+        })
+        if(res.ok){
+            setNewUser(username);
+            setAlert({
+                variant:"success",
+                title:`Welcome ${username}`,
+                body:`Please login to continue!`,
+            })
+        }else{
+            try{
+                let body= await res.json();
+                let err= body.error;
+                setAlert({
+                    variant:"warning",
+                    title:`Login Error`,
+                    body: err,
+                });
+            }catch{
+                setAlert({
+                    variant:"danger",
+                    title:`Server Error!`,
+                    body: "Connection Failed",
+                });
             }
-        },(err)=>{
-            alert(err);
-        });
+            
+        }
         setIsLoading(false);
     }
+    
+    /*
+    function validateConfirmationForm() {
+        return confirmationCode.length > 0;
+    }
 
+    
     async function handleConfirmationSubmit(event) {
         event.preventDefault();
 
@@ -79,7 +94,20 @@ export default function Signup(props) {
         </Form>
         );
     }
-
+    */
+    function redirect(){
+        setTimeout(()=>{
+            history.push('/login');
+        },3000);
+    }
+    function validateForm() {
+        return (
+            username.length>0 &&
+            email.length > 0 &&
+            password.length > 0 &&
+            password === confirmPassword
+        );
+    }
     function renderForm() {
         return (
         <Form onSubmit={handleSubmit}>
@@ -117,7 +145,9 @@ export default function Signup(props) {
                 value={confirmPassword}
             />
             </FormGroup>
-            {(isLoading)? <Spinner animation="border" />:<Button block disabled={!validateForm()} type="submit">Sign Up</Button>}
+            <div className="spinner">
+                {(isLoading)? <Spinner animation="border" />:<Button block disabled={!validateForm()} type="submit">Sign Up</Button>}
+            </div>
         </Form>
         );
     }
@@ -125,7 +155,9 @@ export default function Signup(props) {
     return (
         <div className="Signup">
             <p>Sign Up</p>
-            {newUser === null ? renderForm() : renderConfirmationForm()}
+            {((profile.mapLoaded && profile.user!==null)||newUser!==null)? redirect():renderForm()}
+            {(alert)? <AlertPopup title={alert.title} body={alert.body} variant={alert.variant}/>:null}
+            {(profile.error)? <AlertPopup title={"Server Error!"} body={profile.error} variant={"danger"}/>:null}
         </div>
     );
 }
