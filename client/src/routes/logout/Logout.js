@@ -18,7 +18,7 @@ export default function Logout(){
         let body= await res.json();
         done(true);
         if(res.ok){
-            window.localStorage.setItem("session",JSON.stringify({timelines:[{name:"default"}]}));
+            window.localStorage.setItem("session",JSON.stringify({timelines:[{name:"new"}]}));
             update({
                 user: null,
                 maps: JSON.parse(window.localStorage.getItem("session")).timelines,

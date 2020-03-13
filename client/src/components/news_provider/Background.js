@@ -28,7 +28,6 @@ class Background extends Component{
         if(this.formatting===0){
             window.addEventListener("scroll",this.handleScroll);
         }
-        this.nlist=this.context[0].maps[0].data||[];
     }
     componentWillUnmount(){
         window.removeEventListener("scroll", this.handleScroll);
@@ -67,9 +66,7 @@ class Background extends Component{
     };
     removeDupMerge(a1,a2) {
         let exists = {};
-        a1.forEach(i=>{
-            exists[i._id] =true;
-        });
+        a1.forEach(i=>exists[i._id]=true);
         a2.forEach(i=>{
             if(!exists[i._id]){
                 a1.push(i);
@@ -110,51 +107,70 @@ class Background extends Component{
             this.getNews();
         });
     }
+    addclick = (e,info)=>{
+        e.preventDefault();
+        let {nlist,mlist}= this;
+        info.lat=0;
+        info.lng=0;
+        
+        let i=0;
+        let d2=new Date(info.publishedAt);
+        if(nlist.length===0){
+            nlist.push(info);
+        }else if(mlist[info._id]){
+            console.log("article already exists!");
+            return;
+        }else{
+            mlist[info._id]=true;
+            while(i<nlist.length){
+                let d1= new Date(nlist[i].publishedAt);
+                if(i===0 && d2<d1){
+                    nlist.unshift(info);
+                    break;
+                }else if(d2<d1){
+                    let result=[...nlist.slice(0,i),info,...nlist.slice(i,nlist.length)];
+                    nlist=result;
+                    break;
+                }else if(i===nlist.length-1){
+                    nlist.push(info);
+
+                    break;
+                }
+                i++;
+            }
+        }
+        this.nlist=nlist;
+        let cpy=this.context[0].maps;
+        cpy[0].data=nlist;
+        this.context[1]({maps:cpy});
+    }
     render() {
+        this.nlist=this.context[0].maps[0].data||[];
+        this.mlist={};
+        this.nlist.forEach(ele=>this.mlist[ele._id]=true);
         let that=this;
         let ncol= (this.props.size>=768) ? 3:1;
-        let content_lim=(this.props.size/15);
+        let content_lim=200;
         let content=[];
         let subcontent=[];
         this.state.news.map((a,c) =>{
-            let addclick=function(e){
-                let info=a;
-                info.lat=0;
-                info.lng=0;
-                e.preventDefault();
-                let i=0;
-                let d2=new Date(info.publishedAt);
-                if(that.nlist.length===0){
-                    that.nlist.push(info);
-                }else{
-                    while(i<that.nlist.length){
-                        if(that.nlist[i]._id===info._id){
-                            console.log("article already exists!");
-                            break;
-                        }
-                        let d1= new Date(that.nlist[i].publishedAt);
-                        if(i===0 && d2<d1){
-                            that.nlist.unshift(info);
-                            break;
-                        }else if(d2<d1){
-                            let result=[...that.nlist.slice(0,i),info,...that.nlist.slice(i,that.nlist.length)];
-                            that.nlist=result;
-                            break;
-                        }else if(i===that.nlist.length-1){
-                            that.nlist.push(info);
-                            break;
-                        }
-                        i++;
-                    }
-                }
-                let cpy=that.context[0].maps;
-                cpy[0].data=that.nlist;
-                that.context[1]({maps:cpy});
-            }
             subcontent.push(
                 <div key={a._id} className={`col-${12/ncol} d-flex align-items-stretch`}>
                     <Card id={a._id}>
-                        <Card.Link href={a.url} target="_blank" rel="noopener noreferrer"><Card.Img variant="left" src={a.urlToImage}/></Card.Link>
+                        <div className="card-container">
+                            <Card.Link href={a.url} target="_blank" rel="noopener noreferrer">
+                                <Card.Img variant="left" src={a.urlToImage}/>
+                            </Card.Link>
+                            <Button 
+                                    className="mt-auto" 
+                                    variant={(that.mlist[a._id])? "secondary":"primary"}
+                                    disabled={that.mlist[a._id]}
+                                    onClick={(e)=>{
+                                        let click=that.addclick.bind(that);
+                                        click(e,a);
+                                    }}
+                            >+</Button>
+                        </div>
                         <Card.Body className="d-flex flex-column" >
                             <Card.Title>
                                 <OverlayTrigger placement="top" delay={{ show: 100, hide: 300 }} overlay={<Tooltip> {a.title}</Tooltip>}>
@@ -164,7 +180,6 @@ class Background extends Component{
                             <Card.Text className="p2 text-muted">
                                 <LongText content={a.description} limit={content_lim}></LongText>
                             </Card.Text>
-                            <Button className="mt-auto" variant="primary" onClick={addclick}>Add To Timeline</Button>
                         </Card.Body>
                     </Card>
                 </div>
@@ -173,7 +188,7 @@ class Background extends Component{
                 if(this.formatting===1){
                     content.push(
                         <Carousel.Item key={""+a._id+c}>
-                            <div id="cards" className="d-flex flex-row w-75 mx-auto my-auto m">{subcontent}</div>
+                            <div id="cards" className="d-flex flex-row mx-auto my-auto m">{subcontent}</div>
                             <br/>
                         </Carousel.Item>
                     )
@@ -200,7 +215,7 @@ class Background extends Component{
         }else if(this.formatting===1){
             return (
                 <div id="news-inner" style={{width:this.props.size*.9+"px",height:"auto",marginLeft:"auto",marginRight:"auto",overflow:"hidden"}}>
-                    <Carousel className="mx-auto" indicators={false}>
+                    <Carousel className="mx-auto" indicators={false} interval={9000}>
                         {content}
                     </Carousel>
                     {(this.context[0].error)? <AlertPopup title={"Server Error!"} body={this.context[0].error} variant={"danger"}/>:null}

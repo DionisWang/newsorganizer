@@ -15,7 +15,6 @@ export default function Home(){
                 <Background max={9} size={width} formatting={1}></Background>
             </div>
             <div className="Timeline">
-                <br></br>
                 <h1>Current Timeline</h1>
                 <div className="map mx-auto">
                     <GoogleMap width={Math.min(width*.9,1024)+"px"} height={height*.7+"px"}></GoogleMap>

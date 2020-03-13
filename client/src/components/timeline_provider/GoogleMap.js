@@ -28,6 +28,7 @@ class GoogleMap extends Component {
     }
     componentDidMount() {
         this.googleMap = this.createGoogleMap();
+        this._isMounted=true;
     };
     componentWillUnmount(){
         this.shown={};
@@ -147,7 +148,7 @@ class GoogleMap extends Component {
     }
     componentDidUpdate(){
         this.loadmarks();
-        if(this.context[0].isLoaded&&!this._isMounted){
+        if(this.context[0].isLoaded&&this.googleMap.controls[gmap.ControlPosition.TOP_RIGHT].length===0){
             let controlDiv = document.createElement('div');
             controlDiv.index = 1;
             ReactDOM.render(<GoogleMapSaveButton 
@@ -157,11 +158,11 @@ class GoogleMap extends Component {
                 />
             ,controlDiv);
             this.googleMap.controls[gmap.ControlPosition.TOP_RIGHT].push(controlDiv);
-            this._isMounted=true;
         }
     }
     loadDateFilter(){
         if(this._isMounted){
+            this.loadmarks();
             let {shown,nlist}=this;
             if(nlist.length===0){
                 return null;
@@ -169,12 +170,12 @@ class GoogleMap extends Component {
             let min= new Date(nlist[0].publishedAt);
             let max= new Date(nlist[nlist.length-1].publishedAt);
             return (
-                <>
+                <div style={{width:"50%",display:"inline-block"}}>
                 <Nouislider
-                        range={{min: min.getTime()-6000, max: max.getTime()+6000}}
+                        range={{min: min.getTime()-1000, max: max.getTime()+1000}}
                         connect={[false,true,false]}
                         step={1000}
-                        start={[min.getTime(), max.getTime()]}
+                        start={[min.getTime()-1000, max.getTime()+1000]}
                         tooltips
                         format= {{ to: this.toFormat, from: Number }}
                         onUpdate={(values)=> {
@@ -194,12 +195,8 @@ class GoogleMap extends Component {
                             let date_range=document.querySelector(".DateRange");
                             date_range.innerHTML=`(Date Filter) From: ${min.toLocaleString()} to ${max.toLocaleString()}`;
                         }}
-
                 />
-                <p className="DateRange"></p>
-                    
-                <p/>
-                </>
+                </div>
             )
         }else{
             return null;
@@ -215,7 +212,10 @@ class GoogleMap extends Component {
                 style={{width: this.props.width, height: this.props.height, display:"inline-block"}}
             />: <AlertPopup variant="danger" title="Failed to load GoogleMap" body="Could not download GoogleMap"/>}
             <p/>
-            {this.loadDateFilter()} 
+            <div style={{width:"100%", textAlign:"center"}}>
+                <p className="DateRange"/>
+                {this.loadDateFilter()} 
+            </div>
         </div>
         )
     }

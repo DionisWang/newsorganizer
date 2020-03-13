@@ -34,10 +34,10 @@ function updater(promise) {
     return result;
 }
 if(window.localStorage.getItem("session")===null){
-    window.localStorage.setItem("session",JSON.stringify({timelines:[{name:"default"}]}));
+    window.localStorage.setItem("session",JSON.stringify({timelines:[{name:"new"}]}));
 }else{
     try{JSON.parse(window.localStorage.getItem("session"))}
-    catch{window.localStorage.setItem("session",JSON.stringify({timelines:[{name:"default"}]}))};
+    catch{window.localStorage.setItem("session",JSON.stringify({timelines:[{name:"new"}]}))};
 }
 
 const initialState={
