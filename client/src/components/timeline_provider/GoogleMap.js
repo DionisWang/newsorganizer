@@ -28,13 +28,12 @@ class GoogleMap extends Component {
     }
     componentDidMount() {
         this.googleMap = this.createGoogleMap();
-        this._isMounted=true;
     };
     componentWillUnmount(){
         this.shown={};
     }
     loadmarks(map_num){
-        this.nlist=this.context[0].maps[map_num||this.state.current].data||[];
+        this.nlist=this.context[0].maps[(map_num||map_num===0)?map_num:this.state.current].data||[];
         let {shown,nlist}=this;
         //let c=0;
         nlist.forEach((info)=>{
@@ -68,7 +67,7 @@ class GoogleMap extends Component {
             gestureHandling: 'greedy',
         })
         //let that=this;
-        map.addListener("bounds_changed",this.checkbounds.bind(this));
+        map.addListener("bounds_changed",this.checkbounds.bind(this), {passive: true});
         /*map.addListener("dblclick",function(e){
             that.nlist.push({_id:1000-that.nlist.length,title:"N/A",description:"N/A",lat:e.latLng.lat(),lng:e.latLng.lng()});
             let cpy= that.context[0].maps;
@@ -99,7 +98,7 @@ class GoogleMap extends Component {
         });
         marker.addListener('click', () => {
             (!infowindow.isOpen())? infowindow.open(marker.get('map'), marker): infowindow.close();
-        });
+        }, {passive: true});
         marker.addListener('rightclick', (e)=> {
             let {nlist}=that;
             let ind= nlist.map(e => e._id).indexOf(info._id);
@@ -109,7 +108,7 @@ class GoogleMap extends Component {
             cpy[that.state.current].data=that.nlist
             that.context[1]({maps:cpy});
             delete that.shown[info._id];
-        });
+        }, {passive: true});
         marker.addListener('dragend', function(e) {
             let {nlist}=that;
             let ind= nlist.map(e => e._id).indexOf(info._id);
@@ -118,7 +117,7 @@ class GoogleMap extends Component {
             let cpy= that.context[0].maps;
             cpy[that.state.current].data=that.nlist
             that.context[1]({maps:cpy});
-        });
+        }, {passive: true});
         return marker;
     }
     toFormat (v) {
@@ -128,12 +127,12 @@ class GoogleMap extends Component {
         this.context[1](this.context[0],{isLoaded:false});
     }
     handleCurrent(e){
+        for(let id in this.shown){
+            this.shown[id].setMap(null);
+        }
+        this.shown={};
+        this.loadmarks(e);
         this.setState({current:e},()=>{
-            for(let id in this.shown){
-                this.shown[id].setMap(null);
-            }
-            this.shown={};
-            this.loadmarks();
             let controlDiv = document.createElement('div');
             controlDiv.index = 1;
             ReactDOM.render(<GoogleMapSaveButton 
@@ -148,7 +147,7 @@ class GoogleMap extends Component {
     }
     componentDidUpdate(){
         this.loadmarks();
-        if(this.context[0].isLoaded&&this.googleMap.controls[gmap.ControlPosition.TOP_RIGHT].length===0){
+        if(this.context[0].isLoaded&&!this._isMounted){
             let controlDiv = document.createElement('div');
             controlDiv.index = 1;
             ReactDOM.render(<GoogleMapSaveButton 
@@ -158,49 +157,46 @@ class GoogleMap extends Component {
                 />
             ,controlDiv);
             this.googleMap.controls[gmap.ControlPosition.TOP_RIGHT].push(controlDiv);
+            this._isMounted=true;
+
         }
     }
     loadDateFilter(){
-        if(this._isMounted){
-            this.loadmarks();
-            let {shown,nlist}=this;
-            if(nlist.length===0){
-                return null;
-            }
-            let min= new Date(nlist[0].publishedAt);
-            let max= new Date(nlist[nlist.length-1].publishedAt);
-            return (
-                <div style={{width:"50%",display:"inline-block"}}>
-                <Nouislider
-                        range={{min: min.getTime()-1000, max: max.getTime()+1000}}
-                        connect={[false,true,false]}
-                        step={1000}
-                        start={[min.getTime()-1000, max.getTime()+1000]}
-                        tooltips
-                        format= {{ to: this.toFormat, from: Number }}
-                        onUpdate={(values)=> {
-                            let min = new Date(values[0]);
-                            let max= new Date(values[1]);
-                            nlist.forEach(info=>{
-                                let pin=shown[info._id];
-                                if(pin){
-                                    let pin_date= new Date(info.publishedAt);
-                                    if(pin_date<min||pin_date>max){
-                                        pin.setMap(null);
-                                    }else{
-                                        pin.setMap(this.googleMap);
-                                    }
-                                }
-                            });
-                            let date_range=document.querySelector(".DateRange");
-                            date_range.innerHTML=`(Date Filter) From: ${min.toLocaleString()} to ${max.toLocaleString()}`;
-                        }}
-                />
-                </div>
-            )
-        }else{
+        let {shown,nlist}=this;
+        if(nlist.length===0){
             return null;
         }
+        let min= new Date(nlist[0].publishedAt);
+        let max= new Date(nlist[nlist.length-1].publishedAt);
+        return (
+            <div style={{width:"50%",display:"inline-block"}}>
+            <Nouislider
+                    range={{min: min.getTime()-1000, max: max.getTime()+1000}}
+                    connect={[false,true,false]}
+                    step={1000}
+                    start={[min.getTime()-1000, max.getTime()+1000]}
+                    tooltips
+                    format= {{ to: this.toFormat, from: Number }}
+                    onUpdate={(values)=> {
+                        let min = new Date(values[0]);
+                        let max= new Date(values[1]);
+                        nlist.forEach(info=>{
+                            let pin=shown[info._id];
+                            if(pin){
+                                let pin_date= new Date(info.publishedAt);
+                                if(pin_date<min||pin_date>max){
+                                    pin.setMap(null);
+                                }else{
+                                    pin.setMap(this.googleMap);
+                                }
+                            }
+                        });
+                        let date_range=document.querySelector(".DateRange");
+                        date_range.innerHTML=`(Date Filter) From: ${min.toLocaleString()} to ${max.toLocaleString()}`;
+                    }}
+            />
+            </div>
+        )
     }
     render() {
         return (
@@ -214,7 +210,7 @@ class GoogleMap extends Component {
             <p/>
             <div style={{width:"100%", textAlign:"center"}}>
                 <p className="DateRange"/>
-                {this.loadDateFilter()} 
+                {(this._isMounted)?this.loadDateFilter():null} 
             </div>
         </div>
         )

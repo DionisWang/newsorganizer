@@ -220,5 +220,6 @@ background: none!important;
   grid-template-rows: 1fr 1fr;
 }
 .flex-row {
+  overflow: hidden;
   margin-bottom: 20px;
 }

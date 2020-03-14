@@ -17,6 +17,7 @@ export default function MapList(props) {
         content.push(<Button variant={variant} key={element.name} size="sm" onClick={()=>{
             window.localStorage.setItem("cur",i);
             setCurrent(i);
+            
             if(props.cstUpdate){
                 props.cstUpdate(i);
             }
