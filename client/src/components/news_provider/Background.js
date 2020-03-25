@@ -141,11 +141,30 @@ class Background extends Component{
         }
         this.nlist=nlist;
         let cpy=this.context[0].maps;
-        cpy[0].data=nlist;
+        cpy[this.current].data=nlist;
+        this.context[1]({maps:cpy});
+    }
+    subclick = (e,info)=>{
+        e.preventDefault();
+        let {nlist}= this;
+        let i= 0;
+        let ind=-1;
+        while(i<nlist.length){
+            if(nlist[i]._id===info._id){
+                ind=i;
+                break;
+            }
+            i++
+        }
+        nlist.splice(ind,1);
+        this.nlist=nlist;
+        let cpy=this.context[0].maps;
+        cpy[this.current].data=nlist;
         this.context[1]({maps:cpy});
     }
     render() {
-        this.nlist=this.context[0].maps[0].data||[];
+        this.current= +window.localStorage.getItem("cur")||0;
+        this.nlist=this.context[0].maps[this.current].data||[];
         this.mlist={};
         this.nlist.forEach(ele=>this.mlist[ele._id]=true);
         let that=this;
@@ -163,13 +182,12 @@ class Background extends Component{
                             </Card.Link>
                             <Button 
                                     className="mt-auto" 
-                                    variant={(that.mlist[a._id])? "secondary":"primary"}
-                                    disabled={that.mlist[a._id]}
+                                    variant={(that.mlist[a._id])? "danger":"success"}
                                     onClick={(e)=>{
-                                        let click=that.addclick.bind(that);
+                                        let click=(that.mlist[a._id])? that.subclick.bind(that):that.addclick.bind(that);
                                         click(e,a);
                                     }}
-                            >+</Button>
+                            >{(that.mlist[a._id])? "-":"+"}</Button>
                         </div>
                         <Card.Body className="d-flex flex-column" >
                             <Card.Title>

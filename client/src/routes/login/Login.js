@@ -17,21 +17,21 @@ export default function Login(props) {
   }
 
   async function handleSubmit(event) {
-      event.preventDefault();
-      setAlert(null);
-      setIsLoading(true);
-      const url = `/api/users?login`;
-      let res= await fetch(url, {
-        method: 'POST',
-        mode: 'same-origin', // no-cors, *cors, same-origin
-        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: 'same-origin', // include, *same-origin, omit
-        referrerPolicy: 'no-referrer', // no-referrer, *client
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            email: email,
-            password: password,
-        }),
+    event.preventDefault();
+    setAlert(null);
+    setIsLoading(true);
+    const url = `/api/users?login`;
+    let res= await fetch(url, {
+      method: 'POST',
+      mode: 'same-origin', // no-cors, *cors, same-origin
+      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: 'same-origin', // include, *same-origin, omit
+      referrerPolicy: 'no-referrer', // no-referrer, *client
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+          email: email,
+          password: password,
+      }),
     });
     try{
       let body = await res.json();

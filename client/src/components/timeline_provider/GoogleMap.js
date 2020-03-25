@@ -34,15 +34,23 @@ class GoogleMap extends Component {
     }
     loadmarks(map_num){
         this.nlist=this.context[0].maps[(map_num||map_num===0)?map_num:this.state.current].data||[];
+        console.log(this.nlist);
         let {shown,nlist}=this;
         //let c=0;
+        let tmp={}
         nlist.forEach((info)=>{
+            tmp[info._id]=true;
             if(!shown[info._id]){
                 //c++;
                 shown[info._id]=this.createMarker(info);
                 //setTimeout(()=>{shown[info._id].setMap(googleMap)}, 5000*c);
             }
         });
+        for(let id in shown){
+            if(!tmp[id]){
+                shown[id].setMap(null);
+            }
+        }
     }
     checkbounds(){
         let north= this.googleMap.getBounds().getNorthEast().lat();

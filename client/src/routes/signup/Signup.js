@@ -15,14 +15,21 @@ export default function Signup(props) {
     const [newUser, setNewUser] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [alert, setAlert]= useState(null);
+    const [validated, setValidated]= useState(false);
     const [profile] = useContext(Context);
     let history = useHistory();
 
     async function handleSubmit(event) {
         event.preventDefault();
         setAlert(null);
-        const url = `/api/users?signup`;
         setIsLoading(true);
+        const form = event.currentTarget;
+        setValidated(true);
+        if(form.checkValidity()===false){
+            setIsLoading(false);
+            return;
+        }
+        const url = `/api/users?signup`;
         let res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -31,7 +38,7 @@ export default function Signup(props) {
                 email: email,
                 password:password,
             }),
-        })
+        });
         if(res.ok){
             setNewUser(username);
             setAlert({
@@ -45,7 +52,7 @@ export default function Signup(props) {
                 let err= body.error;
                 setAlert({
                     variant:"warning",
-                    title:`Login Error`,
+                    title:`Signup Error`,
                     body: err,
                 });
             }catch{
@@ -59,7 +66,14 @@ export default function Signup(props) {
         }
         setIsLoading(false);
     }
-    
+    function checkPasswordMatch(e){
+        if(e.target.value!==password){
+            e.target.setCustomValidity("Password mismatch!");
+        }else{
+            e.target.setCustomValidity("");
+        }
+        setConfirmPassword(e.target.value);
+    }
     /*
     function validateConfirmationForm() {
         return confirmationCode.length > 0;
@@ -100,53 +114,66 @@ export default function Signup(props) {
             history.push('/login');
         },3000);
     }
-    function validateForm() {
-        return (
-            username.length>0 &&
-            email.length > 0 &&
-            password.length > 0 &&
-            password === confirmPassword
-        );
-    }
     function renderForm() {
         return (
-        <Form onSubmit={handleSubmit}>
+        <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <FormGroup>
             <FormLabel>Username</FormLabel>
             <FormControl
                 autoFocus
-                type="username"
+                required
+                type="text"
                 value={username}
                 onChange={e =>setUsername(e.target.value)}
             />
+            <Form.Control.Feedback type="invalid">
+              Please choose a username.
+            </Form.Control.Feedback>
             </FormGroup>
+
             <FormGroup>
             <FormLabel>Email</FormLabel>
             <FormControl
                 autoFocus
+                required
                 type="email"
                 value={email}
                 onChange={e =>setEmail(e.target.value)}
             />
+            <Form.Control.Feedback type="invalid">
+              Please choose a valid email like example@gmail.com.
+            </Form.Control.Feedback>
             </FormGroup>
+
             <FormGroup>
             <FormLabel>Password</FormLabel>
             <FormControl
+                required
+                minLength="6"
+                maxLength="25"
                 type="password"
                 value={password}
                 onChange={e =>setPassword(e.target.value)}
             />
+            <Form.Control.Feedback type="invalid">
+                Password must be between 6 and 25 characters long
+            </Form.Control.Feedback>
             </FormGroup>
+
             <FormGroup>
             <FormLabel>Confirm Password</FormLabel>
             <FormControl
+                required
                 type="password"
-                onChange={e =>setConfirmPassword(e.target.value)}
+                onChange={e =>checkPasswordMatch(e)}
                 value={confirmPassword}
             />
+            <Form.Control.Feedback type="invalid">
+              Passwords don't match
+            </Form.Control.Feedback>
             </FormGroup>
             <div className="spinner">
-                {(isLoading)? <Spinner animation="border" />:<Button block disabled={!validateForm()} type="submit">Sign Up</Button>}
+                {(isLoading)? <Spinner animation="border" />:<Button block type="submit">Sign Up</Button>}
             </div>
         </Form>
         );
