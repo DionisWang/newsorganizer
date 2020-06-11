@@ -169,9 +169,8 @@ color: #999;
 .card-link img{
   width: 100%;
   height: auto;
-  min-width: 20vw;
-  max-height: 15vw;
-  min-height: 15vw;
+  min-height: 25vh;
+  max-height: 25vh;
   object-fit: cover;
 }
 .card-link{
@@ -208,13 +207,14 @@ background: none!important;
 }
 .card-container .btn{
   width:2.5vw;
-  height:auto;
+  height:2.5vw;
   position: absolute;
   top: 0%;
   left:100%;
   transform: translate(-100%, 0%);
   -ms-transform: translate(-100%, 0%);
-  text-align: center;
+  justify-content: center;
+  font-size: 1.25vw;
 }
 #Home{
   display: grid;
