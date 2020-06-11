@@ -169,8 +169,9 @@ color: #999;
 .card-link img{
   width: 100%;
   height: auto;
-  max-height: 250px;
-  min-height: 250px;
+  min-width: 20vw;
+  max-height: 15vw;
+  min-height: 15vw;
   object-fit: cover;
 }
 .card-link{
@@ -222,4 +223,11 @@ background: none!important;
 .flex-row {
   overflow: hidden;
   margin-bottom: 20px;
+}
+.loader .spinner-border{
+    width: 10rem;
+    height: 10rem;
+    border: 0.5rem solid currentColor;
+    border-right-color: transparent;
+    text-align: center;
 }

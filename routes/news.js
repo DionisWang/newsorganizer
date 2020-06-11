@@ -9,15 +9,14 @@ async function search(req,res,first){
     
     page--;
     let start= page*limit-offset;
-    let end = start+limit;
 
-    let news = await req.context.models.News.find({ title: { $regex: s, $options: "i" } }).sort({publishedAt: -1});
+    let news = await req.context.models.News.find({ title: { $regex: s, $options: "i" } }).sort({publishedAt: -1}).skip(start).limit(limit);
     console.log(`Searched for ${s|| "current"}: ${news.length} results`);
     if(news.length<limit&&first){
         console.log("Weird search...")
         return searchNews(s,req.context.models).then(()=>{return search(req,res,false)});
     }else{
-        return news.slice(start,end);
+        return news;
     }
 }
 const router = Router();

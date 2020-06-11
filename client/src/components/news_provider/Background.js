@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Button, Carousel, Tooltip, OverlayTrigger } from "react-bootstrap";
+import { Card, Button, Carousel, Tooltip, OverlayTrigger, Spinner } from "react-bootstrap";
 import LongText from './LongText';
 import {Context} from '../hooks/UserProfile';
 import AlertPopup from '../AlertPopup';
@@ -11,6 +11,7 @@ class Background extends Component{
         super(props);
         this.max= parseInt(props.max)||Infinity;
         this.formatting= props.formatting || 0;
+        this.loading=true;
         const params = new URLSearchParams(window.location.search);
 
         this.state={
@@ -24,7 +25,7 @@ class Background extends Component{
     }
     componentDidMount(){
         window.addEventListener('popstate', this.handleSearch);
-        this.getNews();
+        this.getNews().then(this.loading=false);
         if(this.formatting===0){
             window.addEventListener("scroll",this.handleScroll);
         }
@@ -163,6 +164,11 @@ class Background extends Component{
         this.context[1]({maps:cpy});
     }
     render() {
+        if(this.loading){
+            return(<div className="loader"><br/><Spinner animation="border" role="status">
+            <span className="sr-only">Loading...</span>
+          </Spinner></div>);
+        }
         this.current= +window.localStorage.getItem("cur")||0;
         this.nlist=this.context[0].maps[this.current].data||[];
         this.mlist={};
