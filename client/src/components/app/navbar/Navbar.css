@@ -4,6 +4,9 @@
   grid-template-columns: min-content minmax(min-content,1fr) min-content;
   grid-column-gap: 5px;
 }
+body{
+  background-image: url("../../../images/background.jpg");background-repeat: repeat;width: 100%;height: 100%;
+}
 #responsive-navbar-nav{
   grid-column-start: 3;
 }
@@ -26,6 +29,10 @@ p{
 }
 .navbar-brand{
   font-size: calc(16px + (24 - 16) * ((100vw - 300px) / (1600 - 300)));
+}
+.navbar-dark .navbar-brand:hover{
+  color: white;
+  text-shadow: 1px 1px whitesmoke;
 }
 .nav-item{
   text-align: right;
@@ -128,6 +135,9 @@ color: #999;
 .Logout p {
   text-align: center;
 }
+.carousel{
+    height:60vh;
+}
 .carousel-item #cards{
   width: 90%;
 }
@@ -140,10 +150,11 @@ color: #999;
 .carousel-control-prev,
 .carousel-control-next,
 .carousel-indicators{
-    filter: invert(100%);
+  filter: invert(100%);
 }
 .card:hover{
-  box-shadow:5px 10px 20px 1px rgba(0,0,0,0.253)!important;
+
+  box-shadow:5px 5px 5px -2px rgba(0,0,0,0.253)!important;
 }
 #News{
   text-align:center;
@@ -206,19 +217,18 @@ background: none!important;
   width: 100%;
 }
 .card-container .btn{
-  width:2.5vw;
-  height:2.5vw;
   position: absolute;
   top: 0%;
   left:100%;
-  transform: translate(-100%, 0%);
+  transform: translate(-105%, 0%);
   -ms-transform: translate(-100%, 0%);
   justify-content: center;
-  font-size: 1.25vw;
+  border-radius:1.5rem!important;
+  font-size: calc(14px + (18 - 14) * ((100vw - 300px) / (1600 - 300)));
 }
 #Home{
   display: grid;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: max-content min-content;
 }
 .flex-row {
   overflow: hidden;
@@ -230,4 +240,13 @@ background: none!important;
     border: 0.5rem solid currentColor;
     border-right-color: transparent;
     text-align: center;
+}
+
+.card{
+    margin-bottom: 5px;
+    border-radius:1rem!important;
+    overflow: hidden;
+}
+.map-list .btn{
+    border-radius: 1rem!important;
 }

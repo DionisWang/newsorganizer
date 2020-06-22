@@ -19,7 +19,7 @@ import {
 
 function App() {
   return (
-    <UserProfile>
+  <UserProfile>
       <Router>
         <MyNavbar/>
         <Switch>

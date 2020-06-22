@@ -34,7 +34,6 @@ class GoogleMap extends Component {
     }
     loadmarks(map_num){
         this.nlist=this.context[0].maps[(map_num||map_num===0)?map_num:this.state.current].data||[];
-        console.log(this.nlist);
         let {shown,nlist}=this;
         //let c=0;
         let tmp={}
@@ -108,6 +107,16 @@ class GoogleMap extends Component {
             (!infowindow.isOpen())? infowindow.open(marker.get('map'), marker): infowindow.close();
         }, {passive: true});
         marker.addListener('rightclick', (e)=> {
+            let {nlist}=that;
+            let ind= nlist.map(e => e._id).indexOf(info._id);
+            marker.setMap(null);
+            nlist.splice(ind,1);
+            let cpy= that.context[0].maps;
+            cpy[that.state.current].data=that.nlist
+            that.context[1]({maps:cpy});
+            delete that.shown[info._id];
+        }, {passive: true});
+        marker.addListener('dblclick', (e)=> {
             let {nlist}=that;
             let ind= nlist.map(e => e._id).indexOf(info._id);
             marker.setMap(null);
