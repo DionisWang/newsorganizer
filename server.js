@@ -78,8 +78,8 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging')
   app.use(secure);
   app.use(express.static(__dirname + '/client/build'));
   app.get('/sitemap.xml', function(req, res) {
-    console.log(sitemap.generate(app));
-    sitemap.generate(app).toXML( function (err, xml) {
+    console.log(sitemap().generate(app));
+    sitemap().generate(app).toXML( function (err, xml) {
         if (err) {
           return res.status(500).end();
         }
