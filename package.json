@@ -22,12 +22,13 @@
         "express": "^4.17.1",
         "mongoose": "^5.9.0",
         "nodemon": "^2.0.2",
+        "ssl-express-www": "^3.0.7",
         "uuid": "^3.4.0"
     },
     "engines": {
         "node": "12.14.1"
     },
     "devDependencies": {
-        "concurrently": "^4.1.2"
+        "concurrently": "^5.2.0"
     }
 }

@@ -4,13 +4,15 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import cookieSession from 'cookie-session';
 import axios from 'axios';
-import uuidv4 from 'uuid/v4'
+import uuidv4 from 'uuid/v4';
+import secure from 'ssl-express-www';
 import models, { connectDb } from './models';
 import routes from './routes';
 
 const port = process.env.PORT || process.env.SERVER_PORT || 5000;
 const app = express();
 
+app.use(secure);
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
