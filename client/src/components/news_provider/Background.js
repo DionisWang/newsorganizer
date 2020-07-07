@@ -236,12 +236,12 @@ class Background extends Component{
             }
             subcontent.push(
                 <div key={a._id} className={`col-${12/ncol} d-flex align-items-stretch`}>
-                    <Card id={a._id}>
+                    <Card id={a._id} itemScope itemType="http://schema.org/Collection">
                         <div className="card-container">
-                            <Card.Link href={a.url} target="_blank" rel="noopener noreferrer">
-                                <Card.Img variant="left" src={a.urlToImage}/>
+                            <Card.Link itemProp="url" href={a.url} target="_blank" rel="noopener noreferrer">
+                                <Card.Img alt={`image from ${newspaper} for: ${fixed_title}`}itemProp="thumbnailUrl" variant="left" src={a.urlToImage}/>
                             </Card.Link>
-                            <Button 
+                            <Button itemScope itemType="addAction"
                                     className="mt-auto" 
                                     variant={(that.mlist[a._id])? "danger":"success"}
                                     onClick={(e)=>{
@@ -249,19 +249,19 @@ class Background extends Component{
                                         click(e,a);
                                     }}
                             >{(that.mlist[a._id])? "-":"+"}</Button>
-                            <p className="source" disabled>&nbsp;&nbsp;{newspaper}&nbsp;&nbsp;</p>
+                            <p itemProp="publisher" className="source" disabled>&nbsp;&nbsp;{newspaper}&nbsp;&nbsp;</p>
                         </div>
                         <Card.Body className="d-flex flex-column" >
-                            <Card.Title>
+                            <Card.Title itemProp="title">
                                 <OverlayTrigger placement="top" delay={{ show: 100, hide: 300 }} overlay={<Tooltip> {a.title}</Tooltip>}>
-                                    <a href={a.url} target="_blank" rel="noopener noreferrer"><p>{`${fixed_title}`}</p></a>
+                                    <a itemProp="url" href={a.url} target="_blank" rel="noopener noreferrer"><p>{`${fixed_title}`}</p></a>
                                 </OverlayTrigger>
                             </Card.Title>
-                            <Card.Text className="p2 text-muted">
+                            <Card.Text itemProp="abstract" className="p2 text-muted">
                                 <LongText content={a.description} limit={content_lim}></LongText>
                             </Card.Text>
                         </Card.Body>
-                        <Card.Footer>
+                        <Card.Footer itemProp="datePublished">
                             {this.lastUpdated(dif)}
                         </Card.Footer>
                     </Card>
