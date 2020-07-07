@@ -23,7 +23,7 @@ export default function SearchBar() {
             <FormControl type="text" placeholder="Search" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
             <InputGroup.Append>
                 <Button variant="dark" type = "submit">
-                    <Image src={s_icon} rounded />
+                    <Image alt="search button" src={s_icon} rounded />
                 </Button>
             </InputGroup.Append>
         </InputGroup>

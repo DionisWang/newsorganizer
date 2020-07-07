@@ -6,13 +6,14 @@ import cookieSession from 'cookie-session';
 import axios from 'axios';
 import uuidv4 from 'uuid/v4';
 import secure from 'ssl-express-www';
+import sitemap from 'express-sitemap'
 import models, { connectDb } from './models';
 import routes from './routes';
 
 const port = process.env.PORT || process.env.SERVER_PORT || 5000;
 const app = express();
 
-app.use(secure);
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -71,11 +72,22 @@ app.get('/api', (req, res) => {
     req.myData.message= "Connection established with database";
     return res.send(req.myData);
 });
-
 if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
   // Add production middleware such as redirecting to https
   // Express will serve up production assets i.e. main.js
+  app.use(secure);
   app.use(express.static(__dirname + '/client/build'));
+  app.get('/sitemap.xml', function(req, res) {
+    console.log(sitemap.generate(app));
+    sitemap.generate(app).toXML( function (err, xml) {
+        if (err) {
+          return res.status(500).end();
+        }
+        res.header('Content-Type', 'application/xml');
+        res.send( xml );
+        console.log(res);
+        });
+    });
   // If Express doesn't recognize route serve index.html
   app.get('*', (req, res) => {
       res.sendFile(
