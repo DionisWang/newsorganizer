@@ -30,6 +30,9 @@ p{
   text-align: right;
   font-size: calc(16px + (24 - 16) * ((100vw - 300px) / (1600 - 300)));
 }
+.navbar-dark .navbar-nav .nav-link {
+    color: #dee2e6;
+}
 .navbar-brand{
   font-size: calc(16px + (24 - 16) * ((100vw - 300px) / (1600 - 300)));
 }
@@ -141,7 +144,7 @@ color: #999;
 .carousel{
     height:65vh;
 }
-.carousel-item #cards{
+.carousel-item .cards{
   width: 90%;
 }
 .carousel-control-next{
@@ -179,6 +182,7 @@ color: #999;
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: left;
+  color: #004085;
 }
 .card-link img{
   width: 100%;
@@ -270,5 +274,5 @@ background: none!important;
 .card-footer {
     text-align: left;
     font-size: calc(12px + (14 - 12) * ((100vw - 300px) / (1600 - 300)));
-    color:gray;
+    color: #19468b;
 }

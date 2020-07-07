@@ -239,7 +239,7 @@ class Background extends Component{
                     <Card id={a._id} itemScope itemType="http://schema.org/Collection">
                         <div className="card-container">
                             <Card.Link itemProp="url" href={a.url} target="_blank" rel="noopener noreferrer">
-                                <Card.Img alt={`image from ${newspaper} for: ${fixed_title}`}itemProp="thumbnailUrl" variant="left" src={a.urlToImage}/>
+                                <Card.Img rel="preload" alt={`image from ${newspaper} for: ${fixed_title}`}itemProp="thumbnailUrl" variant="left" src={a.urlToImage}/>
                             </Card.Link>
                             <Button itemScope itemType="addAction"
                                     className="mt-auto" 
@@ -271,14 +271,14 @@ class Background extends Component{
                 if(this.formatting===1){
                     content.push(
                         <Carousel.Item key={""+a._id+c}>
-                            <div id="cards" className="d-flex flex-row mx-auto my-auto m">{subcontent}</div>
+                            <div className="d-flex flex-row mx-auto my-auto m cards">{subcontent}</div>
                             <br/>
                         </Carousel.Item>
                     )
                 }else if(this.formatting===0){
                     content.push(
                         <React.Fragment key={""+a._id+c}>
-                            <div id="cards" className="d-flex flex-row">{subcontent}</div>
+                            <div className="d-flex flex-row cards">{subcontent}</div>
                         </React.Fragment>
                     )
                 }
