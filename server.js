@@ -137,9 +137,9 @@ const updateNews= async () =>{
       publishedAt: c.publishedAt,
       content: c.content,
     });
-    console.log("news library updated")
     temp.save(function(error) {return});
   }
+  console.log("news library updated");
 }
 const createUsersWithMessages = async () => {
   const user1 = new models.User({
