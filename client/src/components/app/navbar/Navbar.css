@@ -136,7 +136,7 @@ color: #999;
   text-align: center;
 }
 .carousel{
-    height:60vh;
+    height:65vh;
 }
 .carousel-item #cards{
   width: 90%;
@@ -249,4 +249,23 @@ background: none!important;
 }
 .map-list .btn{
     border-radius: 1rem!important;
+}
+.card-container .source{
+    position: absolute;
+    top: 100%;
+    left:100%;
+    transform: translate(-100%, -100%);
+    -ms-transform: translate(-100%, -100%);
+    justify-content: center;
+    border-radius:0rem!important;
+    font-size: calc(12px + (14 - 12) * ((100vw - 300px) / (1600 - 300)));
+    background-color: black;
+    color:white;
+    opacity: 70%;
+    white-space: nowrap;
+}
+.card-footer {
+    text-align: left;
+    font-size: calc(12px + (14 - 12) * ((100vw - 300px) / (1600 - 300)));
+    color:gray;
 }

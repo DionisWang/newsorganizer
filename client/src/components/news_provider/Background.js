@@ -163,6 +163,52 @@ class Background extends Component{
         cpy[this.current].data=nlist;
         this.context[1]({maps:cpy});
     }
+    lastUpdated = (ms)=>{
+        let sec = Math.floor(ms/1000);
+        let min = Math.floor(sec/60);
+        let hrs = Math.floor(min/60);
+        let days = Math.floor(hrs/24);
+        let months = Math.floor(days/30);
+        let years = Math.floor(months/12);
+        if(sec<60){
+            if(sec===1){
+                return "a second ago";
+            }else{
+                return Math.floor(sec) + " seconds ago";
+            }
+        }else if(min<60){
+            if(min===1){
+                return "a minute ago";
+            }else{
+                return Math.floor(min) + " minutes ago";
+            }
+        }else if(hrs<24){
+            if(hrs===1){
+                return "an hour ago";
+            }else{
+                return Math.floor(hrs) + " hours ago";
+            }
+        }else if(days<30){
+            if(days===1){
+                return "a day ago";
+            }else{
+                return Math.floor(days) + " days ago";
+            }
+        }else if(months<12){
+            if(months===1){
+                return "a month ago";
+            }else{
+                return Math.floor(months) + " months ago";
+            }
+        }else{
+            if(years===1){
+                return "a year ago";
+            }else{
+                return Math.floor(years) + " years ago";
+            }
+        }
+
+    }
     render() {
         if(this.loading){
             return(<div className="loader"><br/><Spinner animation="border" role="status">
@@ -179,6 +225,15 @@ class Background extends Component{
         let content=[];
         let subcontent=[];
         this.state.news.map((a,c) =>{
+            let titles_list= a.title.split(' - ');
+            let newspaper= titles_list[titles_list.length-1];
+            let fixed_title="";
+            let now = new Date();
+            let pub = new Date(a.publishedAt);
+            let dif = now.getTime()-pub.getTime();
+            for(let i=0; i<titles_list.length-1;i++){
+                fixed_title+=titles_list[i];
+            }
             subcontent.push(
                 <div key={a._id} className={`col-${12/ncol} d-flex align-items-stretch`}>
                     <Card id={a._id}>
@@ -194,17 +249,21 @@ class Background extends Component{
                                         click(e,a);
                                     }}
                             >{(that.mlist[a._id])? "-":"+"}</Button>
+                            <p className="source" disabled>&nbsp;&nbsp;{newspaper}&nbsp;&nbsp;</p>
                         </div>
                         <Card.Body className="d-flex flex-column" >
                             <Card.Title>
                                 <OverlayTrigger placement="top" delay={{ show: 100, hide: 300 }} overlay={<Tooltip> {a.title}</Tooltip>}>
-                                    <a href={a.url} target="_blank" rel="noopener noreferrer"><p>{`${a.title}`}</p></a>
+                                    <a href={a.url} target="_blank" rel="noopener noreferrer"><p>{`${fixed_title}`}</p></a>
                                 </OverlayTrigger>
                             </Card.Title>
                             <Card.Text className="p2 text-muted">
                                 <LongText content={a.description} limit={content_lim}></LongText>
                             </Card.Text>
                         </Card.Body>
+                        <Card.Footer>
+                            {this.lastUpdated(dif)}
+                        </Card.Footer>
                     </Card>
                 </div>
             )
