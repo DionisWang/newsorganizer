@@ -6,7 +6,6 @@ import cookieSession from 'cookie-session';
 import axios from 'axios';
 import uuidv4 from 'uuid/v4';
 import secure from 'ssl-express-www';
-import sitemap from 'express-sitemap';
 import compression from 'compression';
 import models, { connectDb } from './models';
 import routes from './routes';
@@ -73,18 +72,24 @@ app.get('/api', (req, res) => {
     req.myData.message= "Connection established with database";
     return res.send(req.myData);
 });
-sitemap().generate(app);
 if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
-  // Add production middleware such as redirecting to https
-  // Express will serve up production assets i.e. main.js
-  app.use(secure);
-  app.use(express.static(__dirname + '/client/build'));
-  // If Express doesn't recognize route serve index.html
-  app.get('*', (req, res) => {
-      res.sendFile(
-          path.resolve(__dirname, 'client', 'build', 'index.html')
-      );
-  });
+    // Add production middleware such as redirecting to https
+    // Express will serve up production assets i.e. main.js
+    app.use(secure);
+    app.use(express.static(__dirname + '/client/build'));
+
+    app.get('/sitemap.xml',(req,res)=>{
+        res.sendFile(
+            path.resolve(__dirname, 'client', 'public', 'sitemap.xml')
+        );
+    })
+
+    // If Express doesn't recognize route serve index.html
+    app.get('*', (req, res) => {
+        res.sendFile(
+            path.resolve(__dirname, 'client', 'build', 'index.html')
+        );
+    });
 }
 
 connectDb().then(async () => {
