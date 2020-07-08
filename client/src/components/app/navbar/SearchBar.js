@@ -20,7 +20,7 @@ export default function SearchBar() {
         <div className="searchbar">
         <Form onSubmit={e=>handleSubmit(e)} className="my-auto">
         <InputGroup>
-            <FormControl id="search" type="text" placeholder="Search" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+            <FormControl id="search" type="text" placeholder="Search" aria-label="Search" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
             <InputGroup.Append>
                 <Button variant="dark" type = "submit">
                     <Image alt="search button" src={s_icon} rounded />

@@ -3,6 +3,7 @@ import { Card, Button, Carousel, Tooltip, OverlayTrigger, Spinner } from "react-
 import LongText from './LongText';
 import {Context} from '../hooks/UserProfile';
 import AlertPopup from '../AlertPopup';
+import brokenImg from '../../images/brokenImg.png';
 
 
 class Background extends Component{
@@ -239,7 +240,7 @@ class Background extends Component{
                     <Card id={a._id} itemScope itemType="http://schema.org/Collection">
                         <div className="card-container">
                             <Card.Link itemProp="url" href={a.url} target="_blank" rel="noopener noreferrer">
-                                <Card.Img rel="preload" alt={`image from ${newspaper} for: ${fixed_title}`}itemProp="thumbnailUrl" variant="left" src={a.urlToImage}/>
+                                <Card.Img rel="preload" alt={`image from ${newspaper} for: ${fixed_title}`}itemProp="thumbnailUrl" src={a.urlToImage}/>
                             </Card.Link>
                             <Button itemScope itemType="addAction"
                                     className="mt-auto" 
@@ -248,7 +249,7 @@ class Background extends Component{
                                         let click=(that.mlist[a._id])? that.subclick.bind(that):that.addclick.bind(that);
                                         click(e,a);
                                     }}
-                            >{(that.mlist[a._id])? "-":"+"}</Button>
+                            >{(that.mlist[a._id])? " - ":"+"}</Button>
                             <p itemProp="publisher" className="source" disabled>&nbsp;&nbsp;{newspaper}&nbsp;&nbsp;</p>
                         </div>
                         <Card.Body className="d-flex flex-column" >
