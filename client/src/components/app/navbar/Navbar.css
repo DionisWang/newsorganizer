@@ -268,7 +268,7 @@ background: none!important;
     font-size: calc(12px + (14 - 12) * ((100vw - 300px) / (1600 - 300)));
     background-color: black;
     color:white;
-    opacity: 70%;
+    opacity: 70%!important;
     white-space: nowrap;
 }
 .card-footer {
