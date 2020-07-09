@@ -242,7 +242,7 @@ class Background extends Component{
                             <Card.Link itemProp="url" href={a.url} target="_blank" rel="noopener noreferrer">
                                 <Card.Img rel="preload" alt={`image from ${newspaper} for: ${fixed_title}`}itemProp="thumbnailUrl" src={a.urlToImage}/>
                             </Card.Link>
-                            <Button itemScope itemType="addAction"
+                            <Button itemScope itemType="https://schema.org/UpdateAction"
                                     className="mt-auto" 
                                     variant={(that.mlist[a._id])? "danger":"success"}
                                     onClick={(e)=>{
