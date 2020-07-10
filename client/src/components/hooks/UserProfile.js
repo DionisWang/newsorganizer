@@ -66,6 +66,29 @@ const UserProfile = ({children}) => {
             apiError(err||'Connection Failed!');
         }
     }
+    async function apiPost(url,body){
+        let res = await fetch(url,{
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'same-origin', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            referrerPolicy: 'no-referrer', // no-referrer, *client
+            body: JSON.stringify(body),
+        })
+        if(res.ok){
+            return res.json();
+        }else{
+            let err;
+            try{
+                err = res.json().error
+            }catch{}
+            apiError(err||'Connection Failed!');
+        }
+    }
     function apiError(err){
         update({
             user:profile.user,
@@ -85,7 +108,10 @@ const UserProfile = ({children}) => {
             return;
         }
         const url = `/api/maps`;
-        apiFetch(url).then(body=>{
+        let body={};
+        body.timeline = timelines[current];
+        body.savename=savename;
+        apiPost(url,body).then(body=>{
             timelines[current].name=savename;
             window.localStorage.setItem("session",JSON.stringify({timelines:timelines}));
             alert(body.message);

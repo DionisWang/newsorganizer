@@ -9,25 +9,38 @@ import AlertPopup from '../AlertPopup';
 import './nouislider.css';
 
 let gmap=null;
-if(!window.google){
-}else{
-    gmap= window.google.maps;
-    gmap.InfoWindow.prototype.isOpen = function(){
-        var map = this.getMap();
-        return (map !== null && typeof map !== "undefined");
-    }
-}
+
 //journal(database), hashtags, multiple timelines, search bar in the middle,
 class GoogleMap extends Component {
     static contextType= Context;
     googleMapRef = React.createRef();
     shown={};
     _isMounted=false;
+    _mapLoaded=false;
     state={
         current:+window.localStorage.getItem("cur")||0,
     }
     componentDidMount() {
-        this.googleMap = this.createGoogleMap();
+        let that=this;
+        const script = document.createElement("script");
+        script.type= "text/javascript";
+        script.async = true;
+        script.defer = true;
+        script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAWW9H-zCDloCTL_AnTYYXmIQOP08GkFXM&libraries=places";
+        document.body.appendChild(script)
+        script.addEventListener("load", ()=>{
+            gmap= window.google.maps;
+            gmap.InfoWindow.prototype.isOpen = function(){
+                var map = that.getMap();
+                return (map !== null && typeof map !== "undefined");
+            }
+            that.googleMap = that.createGoogleMap();
+            that._mapLoaded=true;
+        });
+        script.addEventListener("error", ()=>{
+            that._mapLoaded=true;
+        });
+        
     };
     componentWillUnmount(){
         this.shown={};
@@ -163,19 +176,21 @@ class GoogleMap extends Component {
         });
     }
     componentDidUpdate(){
-        this.loadmarks();
-        if(this.context[0].isLoaded&&!this._isMounted){
-            let controlDiv = document.createElement('div');
-            controlDiv.index = 1;
-            ReactDOM.render(<GoogleMapSaveButton 
-                    user={(this.context[0].user)? true:false} 
-                    handleSave={this.handleSave.bind(this)}
-                    baseName={this.context[0].maps[this.state.current].name}
-                />
-            ,controlDiv);
-            this.googleMap.controls[gmap.ControlPosition.TOP_RIGHT].push(controlDiv);
-            this._isMounted=true;
+        if(this._mapLoaded){
+            this.loadmarks();
+            if(this.context[0].isLoaded&&!this._isMounted){
+                let controlDiv = document.createElement('div');
+                controlDiv.index = 1;
+                ReactDOM.render(<GoogleMapSaveButton 
+                        user={(this.context[0].user)? true:false} 
+                        handleSave={this.handleSave.bind(this)}
+                        baseName={this.context[0].maps[this.state.current].name}
+                    />
+                ,controlDiv);
+                this.googleMap.controls[gmap.ControlPosition.TOP_RIGHT].push(controlDiv);
+                this._isMounted=true;
 
+            }
         }
     }
     loadDateFilter(){
@@ -219,11 +234,12 @@ class GoogleMap extends Component {
         return (
         <div style={{width: this.props.width, height: this.props.height, display:"inline-block"}}>
             <MapList cstUpdate={this.handleCurrent.bind(this)}></MapList>
-            {(gmap)? <div
+            <div
                 id="google-map"
                 ref={this.googleMapRef}
                 style={{width: this.props.width, height: this.props.height, display:"inline-block"}}
-            />: <AlertPopup variant="danger" title="Failed to load GoogleMap" body="Could not download GoogleMap"/>}
+            />
+            {(this._mapLoaded&&!this.googleMap) ? <AlertPopup variant="danger" title="Failed to load GoogleMap" body="Could not download GoogleMap"/>:null}
             <p/>
             <div style={{width:"100%", textAlign:"center"}}>
                 <p className="DateRange"/>
@@ -232,5 +248,6 @@ class GoogleMap extends Component {
         </div>
         )
     }
+
 }
 export default GoogleMap

@@ -2,7 +2,11 @@ import { Router } from 'express';
 const router = Router();
 router.get('/', async (req, res) => {
     const timelines= await req.context.models.Timeline.find({user: req.context.user}).select('-user -__v -_id').populate('data','-__v').lean();
+    let result = [];
     for(let i=0;i<timelines.length;i++){
+        result[i]={};
+        result[i].name=timelines[i].name;
+        result[i].data=[];
         let cur_data=timelines[i].data;
         let cur_pins=timelines[i].pins;
         for(let j=0;j<cur_data.length;j++){
@@ -10,13 +14,12 @@ router.get('/', async (req, res) => {
             let pin= cur_pins[j];
             news.lat= pin.lat;
             news.lng= pin.lng;
+            result[i].data[j]=Object.assign({},news);
         }
-        delete timelines[i].pins;
     }
-    return res.send({timelines:timelines});
+    return res.send({timelines:result});
 });
 router.post('/', async (req, res) => {
-    console.log(req.body);
     if(!req.context.user||!req.body.timeline){
         return;
     }
@@ -44,7 +47,6 @@ router.post('/', async (req, res) => {
             });
         }
     }
-    console.log(formatted_data, formatted_pins, sec_check);
 
     if(sec_check){
         await req.context.models.Timeline.findOne({name:name}, (err,cur_timeline)=>{
@@ -57,7 +59,7 @@ router.post('/', async (req, res) => {
                 cur_timeline.data= formatted_data;
                 cur_timeline.pins= formatted_pins;
                 cur_timeline.markModified('pins');
-                cur_timeline.save().then(()=>{return res.send({message: "Successfully updated!"})} )
+                cur_timeline.save().then(()=>{res.send({message: "Successfully updated!"})} )
             }else{
                 req.context.models.Timeline.create({
                     name: savename,

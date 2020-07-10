@@ -9,6 +9,9 @@ export default function GoogleMapSaveButton(props){
     let save = (e)=>{
         e.preventDefault()
         let name = textInput.current.value;
+        if(name===""){
+            name=props.baseName;
+        }
         if(props.user===false){
             setAlert({
                 variant: "warning",
