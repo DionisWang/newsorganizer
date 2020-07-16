@@ -8,12 +8,13 @@ import './Navbar.css';
 
 export default function MyNavbar(){
     const [profile] = useContext(Context);
+    // eslint-disable-next-line
     let width=useWidth();
     function titler(){
-        if(!profile.mapLoaded){
+        if(!profile.isLoaded){
             return "User"
         }else{
-            if(profile.user===null){
+            if(profile.user===null||window.localStorage.getItem("logging off")){
                 return "User"
             }else{
                 return profile.user.username;
@@ -21,7 +22,7 @@ export default function MyNavbar(){
         }
     }
     return(
-        <Navbar style={{width:width+"px"}}collapseOnSelect expand="md" bg="dark" variant="dark" sticky="top">
+        <Navbar collapseOnSelect expand="md" bg="dark" variant="dark" sticky="top">
             <Navbar.Brand href="/">News Organizer</Navbar.Brand>
             <SearchBar/>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />

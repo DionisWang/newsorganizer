@@ -190,7 +190,7 @@ color: #999;
   height: auto;
   text-align: center;
   min-height: 188px;
-  max-height: 100vh;
+  max-height: 25vh;
   object-fit: cover;
   vertical-align: middle;
   border-style: none;

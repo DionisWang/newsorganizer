@@ -10,7 +10,10 @@ router.get('/', async (req, res) => {
             email:uuidv4(),
             anon: true,
         };
-        req.myData.info={anon: true};
+        req.myData.info={
+            username: null,
+            anon: true
+        };
         res.send({message: "You have sucessfully logged off!"});
     }else{
         res.send({message: "You are not logged in..."});

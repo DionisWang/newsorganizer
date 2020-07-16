@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Button, FormGroup, FormControl, FormLabel, Form ,Spinner} from "react-bootstrap";
 import {Context} from '../../components/hooks/UserProfile'
-import { useHistory } from "react-router";
 import AlertPopup from '../../components/AlertPopup'
 
 export default function Login(props) {
@@ -10,7 +9,6 @@ export default function Login(props) {
   const [profile,update] = useContext(Context);
   const [alert, setAlert]= useState(null);
   const [isLoading, setIsLoading]= useState(false);
-  let history= useHistory();
 
   function validateForm() {
     return email.length > 0 && password.length > 0;
@@ -41,6 +39,7 @@ export default function Login(props) {
           maps: JSON.parse(window.localStorage.getItem("session")).timelines,
           isLoaded: true,
           mapLoaded: false,
+          redirect: '/profile'
         });
       }else{
         if (res.status !== 200){
@@ -61,9 +60,6 @@ export default function Login(props) {
     setIsLoading(false);
   }
   function loggedIn(){
-    setTimeout(()=>{
-      history.push('/profile');
-    },1000);
     return <p>Welcome {profile.user.username}!</p>;
   }
   function notLoggedIn(){

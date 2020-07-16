@@ -1,4 +1,5 @@
-import React, {createContext, useEffect, useReducer} from "react";
+import React, {createContext, useEffect, useReducer, useState, useCallback} from "react";
+import { useHistory } from "react-router";
 
 const reducer = (prevState, updatedProperty) => ({
     ...prevState,
@@ -48,7 +49,20 @@ const initialState={
 }
 const UserProfile = ({children}) => {
     const [profile, update] = useReducer(reducer,initialState);
-    async function apiFetch(url){
+    const [userLoading, setUserLoading] = useState(false);
+    const [mapLoading, setMapLoading] = useState(false);
+
+    let history = useHistory();
+    const apiError = useCallback( (err)=>{
+        update({
+            user:profile.user,
+            maps:profile.maps,
+            isLoaded: true,
+            mapLoaded: true,
+            error: err||"Connection Failed!",
+        });
+    },[profile.maps,profile.user]);
+    const apiFetch = useCallback(async (url)=>{
         let res = await fetch(url,{
             method: 'GET', // *GET, POST, PUT, DELETE, etc.
             mode: 'same-origin', // no-cors, *cors, same-origin
@@ -65,8 +79,8 @@ const UserProfile = ({children}) => {
             }catch{}
             apiError(err||'Connection Failed!');
         }
-    }
-    async function apiPost(url,body){
+    },[apiError]);
+    const apiPost = useCallback(async (url,body)=>{
         let res = await fetch(url,{
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
             mode: 'same-origin', // no-cors, *cors, same-origin
@@ -88,16 +102,8 @@ const UserProfile = ({children}) => {
             }catch{}
             apiError(err||'Connection Failed!');
         }
-    }
-    function apiError(err){
-        update({
-            user:profile.user,
-            maps:profile.maps,
-            isLoaded: true,
-            mapLoaded: true,
-            error: err||"Connection Failed!",
-        });
-    }
+    },[apiError]);
+    
 
     async function saver(timelines){
         let savename = window.localStorage.getItem("savename");
@@ -117,17 +123,8 @@ const UserProfile = ({children}) => {
             alert(body.message);
         }).catch(err=>{});
     }
-    
     useEffect(()=>{
-        try{
-            let save = window.localStorage.getItem("save");
-            if(save){
-                saver(profile.maps);
-                window.localStorage.removeItem("save");
-            }
-        }catch{};
-        window.localStorage.setItem("session",JSON.stringify({timelines:profile.maps}));
-        if(!profile.isLoaded){
+        if(!userLoading){
             const updateUser= new Promise ((resolve,reject) =>{
                 const url = `/api/`;
                 apiFetch(url).then(body=>{
@@ -150,40 +147,61 @@ const UserProfile = ({children}) => {
                     return;
                 }
             },50);
-        }else{
-            if(profile.user!==null&& !profile.mapLoaded){
-                const getTimeline= new Promise ((resolve,reject) =>{
-                    const url = `/api/maps`;
-                    apiFetch(url).then(body=>{
-                        resolve(body.timelines);
-                    }).catch(err=>{reject(err)});
-                });
-                let user_maps=updater(getTimeline);
-                let checker = setInterval(()=>{
-                    if(!user_maps.isPending()){
-                        clearInterval(checker);
-                        user_maps.then((res)=>{
-                            let cur= JSON.parse(window.localStorage.getItem("session")).timelines;
-                            let exist={};
-                            for(let i in cur){
-                                exist[cur[i].name]= true;
+            setUserLoading(true);
+        }
+    },[userLoading, apiFetch, profile.maps, apiError])
+    useEffect(()=>{
+        if(profile.user!==null&& !mapLoading){
+            const getTimeline= new Promise ((resolve,reject) =>{
+                const url = `/api/maps`;
+                apiFetch(url).then(body=>{
+                    resolve(body.timelines);
+                }).catch(err=>{reject(err)});
+            });
+            let user_maps=updater(getTimeline);
+            let checker = setInterval(()=>{
+                if(!user_maps.isPending()){
+                    clearInterval(checker);
+                    user_maps.then((res)=>{
+                        let cur= JSON.parse(window.localStorage.getItem("session")).timelines;
+                        let exist={};
+                        for(let i in cur){
+                            exist[cur[i].name]= true;
+                        }
+                        for(let i in res){
+                            if(!exist[res[i].name]){
+                                cur.push(res[i]);
                             }
-                            for(let i in res){
-                                if(!exist[res[i].name]){
-                                    cur.push(res[i]);
-                                }
-                            }
-                            update({
-                                user:profile.user,
-                                maps:cur,
-                                isLoaded: true,
-                                mapLoaded: true,
-                            });
+                        }
+                        update({
+                            user:profile.user,
+                            maps:cur,
+                            isLoaded: true,
+                            mapLoaded: true,
                         });
-                        return;
-                    }
-                },50);
+                    });
+                    return;
+                }
+            },100);
+            setMapLoading(true);
+        }
+    },[apiFetch, mapLoading, profile.user])
+    useEffect(()=>{
+        if(profile.redirect!==''){
+            history.push(profile.redirect);
+            update({redirect:''})
+        }
+        try{
+            let save = window.localStorage.getItem("save");
+            if(save){
+                saver(profile.maps);
+                window.localStorage.removeItem("save");
             }
+        }catch{};
+        window.localStorage.setItem("session",JSON.stringify({timelines:profile.maps}));
+        if(profile.isLoaded&&profile.user==null){
+            console.log(profile);
+            window.localStorage.removeItem("logging off");
         }
     });
     return (

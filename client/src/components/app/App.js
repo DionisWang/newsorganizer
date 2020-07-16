@@ -19,8 +19,8 @@ import {
 
 function App() {
   return (
-  <UserProfile>
-      <Router>
+    <Router>
+        <UserProfile>
         <MyNavbar/>
         <Switch>
           <Route exact key="news" path="/news" component={News}/>
@@ -32,8 +32,8 @@ function App() {
           <Route exact key="logout" path="/logout" component={Logout}/>
           <Route exact key="signup" path="/signup" component={Signup}/>
         </Switch>
-      </Router>
-    </UserProfile>
+        </UserProfile>
+    </Router>
   )
 }
 

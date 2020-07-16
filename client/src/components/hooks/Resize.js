@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
-const getWidth = () => document.documentElement.clientWidth 
-  || document.body.clientWidth
+const getWidth = () => document.body.clientWidth
+  || document.documentElement.clientWidth 
   || window.innerWidth;
 
 export default function useWidth() {
@@ -25,8 +25,8 @@ export default function useWidth() {
   return width;
 }
 
-const getHeight = () => document.documentElement.clientHeight 
-  || document.body.clientHeight
+const getHeight = () => document.body.clientHeight
+  || document.documentElement.clientHeight
   || window.innerHeight;
 
 export function useHeight() {

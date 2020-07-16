@@ -1,5 +1,4 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useHistory } from "react-router";
 import {Context} from '../../components/hooks/UserProfile';
 
 
@@ -9,7 +8,8 @@ export default function Logout(){
     const [isDone, done] = useState(false);
     // eslint-disable-next-line
     const [profile,update] = useContext(Context);
-    let history = useHistory();
+    window.localStorage.setItem("logging off","true");
+
     async function callLogout(){
         let res = await fetch("/api/logout", {
             method: 'GET',
@@ -19,28 +19,28 @@ export default function Logout(){
         done(true);
         if(res.ok){
             window.localStorage.setItem("session",JSON.stringify({timelines:[{name:"new"}]}));
+            setMessage(body.message);
             update({
                 user: null,
+                isLoaded: false,
                 maps: JSON.parse(window.localStorage.getItem("session")).timelines,
+                redirect:'/',
             });
-            setMessage(body.message);
             window.localStorage.removeItem("cur");
-            setTimeout(()=>{
-                history.push('/');
-            },1000);
+            
         }else{
             setMessage(body.error);
         }
     }
     useEffect(()=>{
         if(!isDone&&profile.mapLoaded){
-            callLogout();
+            callLogout()
         }
     })
     return (
         <div className="Logout">
             <br/>
-            <p>{message}</p>
+            <p>{(isDone)?message:null}</p>
         </div>
     );
 }

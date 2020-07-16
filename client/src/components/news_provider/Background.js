@@ -1,10 +1,8 @@
-import React, { Component, lazy, Suspense } from 'react';
+import React, { Component} from 'react';
 import { Carousel, Spinner } from "react-bootstrap";
 import {Context} from '../hooks/UserProfile';
 import AlertPopup from '../AlertPopup';
-
-const NewsCard=lazy(()=>import('./NewsCard'));
-const renderLoader = () => <div/>;
+import NewsCard from './NewsCard';
 
 class Background extends Component{
     static contextType= Context;
@@ -184,10 +182,7 @@ class Background extends Component{
                 let click=(that.mlist[a._id])? that.subclick.bind(that):that.addclick.bind(that);
                 click(e,a);
             };
-            subcontent.push(<Suspense key={a._id} fallback={renderLoader()}>
-                                <NewsCard a={a} handleClick={handleClick.bind(this)} that={this} ncol={ncol}/>
-                            </Suspense>
-            )
+            subcontent.push(<NewsCard key={a._id} a={a} handleClick={handleClick.bind(this)} that={this} ncol={ncol}/>)
             if(c%ncol===ncol-1 ||c===that.state.news.length-1){
                 if(this.formatting===1){
                     content.push(
