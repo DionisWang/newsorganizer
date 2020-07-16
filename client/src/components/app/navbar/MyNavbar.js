@@ -1,5 +1,6 @@
 import React, {useContext} from 'react';
 import { Navbar, Nav, NavDropdown} from "react-bootstrap";
+import useWidth from '../../hooks/Resize';
 import SearchBar from './SearchBar';
 import {Context} from '../../hooks/UserProfile'
 import './Navbar.css';
@@ -7,6 +8,7 @@ import './Navbar.css';
 
 export default function MyNavbar(){
     const [profile] = useContext(Context);
+    let width=useWidth();
     function titler(){
         if(!profile.mapLoaded){
             return "User"
@@ -19,7 +21,7 @@ export default function MyNavbar(){
         }
     }
     return(
-        <Navbar collapseOnSelect expand="md" bg="dark" variant="dark" sticky="top">
+        <Navbar style={{width:width+"px"}}collapseOnSelect expand="md" bg="dark" variant="dark" sticky="top">
             <Navbar.Brand href="/">News Organizer</Navbar.Brand>
             <SearchBar/>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />

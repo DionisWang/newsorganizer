@@ -91,7 +91,7 @@ class Background extends Component{
         var d = document.documentElement;
         var offset = d.scrollTop + window.innerHeight;
         var height = d.offsetHeight;
-        if (offset+200 >= height) {
+        if (offset+400 >= height) {
             this.loadMore();
         }
     };

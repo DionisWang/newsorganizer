@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import LongText from './LongText';
+import LazyImage from './LazyImage';
 
 function lastUpdated(ms){
     let sec = Math.floor(ms/1000);
@@ -66,7 +67,7 @@ export default function NewsCard(props) {
             <Card itemScope itemType="http://schema.org/Collection">
             <div className="card-container">
                 <Card.Link itemProp="url" href={a.url} target="_blank" rel="noopener noreferrer">
-                    <Card.Img rel="preload" alt={`image from ${newspaper} for: ${fixed_title}`}itemProp="thumbnailUrl" src={a.urlToImage}/>
+                    <LazyImage newspaper={newspaper} fixed_title={fixed_title} urlToImage={a.urlToImage}/>
                 </Card.Link>
                 <Button itemScope itemType="https://schema.org/UpdateAction"
                         className="mt-auto" 

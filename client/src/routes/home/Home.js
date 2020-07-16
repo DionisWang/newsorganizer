@@ -1,5 +1,4 @@
-import React, { lazy, Suspense } from 'react';
-import {Spinner } from "react-bootstrap";
+import React from 'react';
 import useWidth, {useHeight} from '../../components/hooks/Resize';
 import GoogleMap from '../../components/timeline_provider/GoogleMap';
 import Background from '../../components/news_provider/Background';

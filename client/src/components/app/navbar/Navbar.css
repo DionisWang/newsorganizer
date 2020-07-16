@@ -189,8 +189,8 @@ color: #999;
   width: 100%;
   height: auto;
   text-align: center;
-  min-height: 25vh;
-  max-height: 25vh;
+  min-height: 188px;
+  max-height: 100vh;
   object-fit: cover;
   vertical-align: middle;
   border-style: none;
@@ -258,6 +258,7 @@ background: none!important;
     margin-bottom: 5px;
     border-radius:1rem!important;
     overflow: hidden;
+    min-height: 380px;
 }
 .map-list .btn{
     border-radius: 1rem!important;

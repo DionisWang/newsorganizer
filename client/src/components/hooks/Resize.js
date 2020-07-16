@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 
-const getWidth = () => window.innerWidth 
-  || document.documentElement.clientWidth 
-  || document.body.clientWidth;
+const getWidth = () => document.documentElement.clientWidth 
+  || document.body.clientWidth
+  || window.innerWidth;
 
 export default function useWidth() {
   let [width, setWidth] = useState(getWidth());
@@ -14,18 +14,20 @@ export default function useWidth() {
       timeoutId = setTimeout(() => setWidth(getWidth()), 150);
     };
     window.addEventListener('resize', resizeListener);
+    window.addEventListener('orientationchange', resizeListener);
 
     return () => {
       window.removeEventListener('resize', resizeListener);
+      window.removeEventListener('orientationchange', resizeListener);
     }
   }, [])
   
   return width;
 }
 
-const getHeight = () => window.innerHeight 
-  || document.documentElement.clientHeight 
-  || document.body.clientHeight;
+const getHeight = () => document.documentElement.clientHeight 
+  || document.body.clientHeight
+  || window.innerHeight;
 
 export function useHeight() {
     let [height, setHeight] = useState(getHeight());
@@ -37,9 +39,12 @@ export function useHeight() {
         timeoutId = setTimeout(() => setHeight(getHeight()), 150);
       };
       window.addEventListener('resize', resizeListener);
-  
+      window.removeEventListener('orientationchange', resizeListener);
+
       return () => {
         window.removeEventListener('resize', resizeListener);
+        window.removeEventListener('orientationchange', resizeListener);
+
       }
     }, [])
     

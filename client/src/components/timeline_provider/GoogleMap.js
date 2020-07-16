@@ -14,19 +14,48 @@ let gmap=null;
 class GoogleMap extends Component {
     static contextType= Context;
     googleMapRef = React.createRef();
-    shown={};
-    _isMounted=false;
-    _mapLoaded=false;
-    state={
-        current:+window.localStorage.getItem("cur")||0,
+    constructor(props) {
+        super(props);
+        this.shown={};
+        this._isMounted=false;
+        this._mapLoaded=false;
+        this.apiKey="AIzaSyAWW9H-zCDloCTL_AnTYYXmIQOP08GkFXM";
+        this.state={
+            current:+window.localStorage.getItem("cur")||0,
+        }
+        let preconnects = [
+            "https://fonts.gstatic.com",
+            "https://maps.gstatic.com",
+            "https://fonts.googleapis.com",
+            "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Google+Sans:400,500,700&display=swap",
+            "https://maps.googleapis.com"
+        ]
+        preconnects.forEach(src=>{
+            const preconnectItem = document.createElement("link");
+            preconnectItem.href=src;
+            preconnectItem.rel="preconnect";
+            preconnectItem.crossOrigin=true;
+            document.head.appendChild(preconnectItem);
+        })    
+        const preloadFont = document.createElement("link");
+        preloadFont.href= "https://fonts.gstatic.com/s/roboto/v20/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2";
+        preloadFont.rel="preload";
+        preloadFont.as= "font";
+        preloadFont.crossOrigin=true;
+        document.body.appendChild(preloadFont);
+
+        const preloadScript = document.createElement("link");
+        preloadScript.href= `https://maps.googleapis.com/maps/api/js?key=${this.apiKey}&libraries=places`;
+        preloadScript.rel="preload";
+        preloadScript.as= "script";
+        document.body.appendChild(preloadScript);
     }
+    
     componentDidMount() {
         let that=this;
+        
         const script = document.createElement("script");
-        script.type= "text/javascript";
-        script.async = true;
-        script.defer = true;
-        script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAWW9H-zCDloCTL_AnTYYXmIQOP08GkFXM&libraries=places";
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${this.apiKey}&libraries=places`;
         document.body.appendChild(script)
         script.addEventListener("load", ()=>{
             gmap= window.google.maps;
