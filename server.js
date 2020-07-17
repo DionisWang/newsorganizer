@@ -9,7 +9,6 @@ import secure from 'ssl-express-www';
 import compression from 'compression';
 import models, { connectDb } from './models';
 import routes from './routes';
-import { isNullOrUndefined } from 'util';
 
 const port = process.env.PORT || process.env.SERVER_PORT || 5000;
 const app = express();
@@ -124,7 +123,7 @@ connectDb().then(async () => {
     ]);
     //createUsersWithMessages();
     */
-    let news = await models.News.find({ urlToImage: isNullOrUndefined }).sort({publishedAt: -1});
+    let news = await models.News.find({ title: { $regex: "", $options: "i" } }).sort({publishedAt: -1});
     news.forEach(article=>{
         if(!article.urlToImage){
             article.urlToImage=saveImg(article.url);
