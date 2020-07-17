@@ -9,6 +9,7 @@ import secure from 'ssl-express-www';
 import compression from 'compression';
 import models, { connectDb } from './models';
 import routes from './routes';
+import { isNullOrUndefined } from 'util';
 
 const port = process.env.PORT || process.env.SERVER_PORT || 5000;
 const app = express();
@@ -92,6 +93,23 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging')
     });
 }
 
+const saveImg = (url)=>{
+    let start = url.indexOf("https://news.google.com/__i/rss/rd/articles/");
+    if(start>-1){
+        start+=44;
+        let encoded= url.substring(start,start+63);
+        let decoded= Buffer.from(encoded, 'base64').toString();
+        let dstart = decoded.indexOf("https://www.youtube.com/watch?v=");
+        if(dstart>-1){
+            dstart+=32
+            let video_id=decoded.substring(dstart,decoded.length);
+            return `https://img.youtube.com/vi/${video_id}/mqdefault.jpg`
+        }
+        
+    }
+    return null;
+}
+
 connectDb().then(async () => {
   /*
     if(process.env.EraseDatabaseOnSync === 'true'){
@@ -106,10 +124,18 @@ connectDb().then(async () => {
     ]);
     //createUsersWithMessages();
     */
-    
+    let news = await models.News.find({ urlToImage: isNullOrUndefined }).sort({publishedAt: -1});
+    news.forEach(article=>{
+        if(!article.urlToImage){
+            article.urlToImage=saveImg(article.url);
+            article.markModified('urlToImage');
+            article.save();
+        }
+    })
     setInterval(function(){updateNews();},300000);
     app.listen(port, () => console.log(`Gator app listening on port ${port}!`));
 });
+
 
 const updateNews= async () =>{
   let res = await axios.get(`http://newsapi.org/v2/top-headlines?country=us&apiKey=${process.env.NEWS_API_KEY}`).catch((err)=>{return});
@@ -129,7 +155,7 @@ const updateNews= async () =>{
       title: c.title,
       description: c.description,
       url: c.url,
-      urlToImage: c.urlToImage,
+      urlToImage: c.urlToImage||saveImg(c.url),
       publishedAt: c.publishedAt,
       content: c.content,
     });

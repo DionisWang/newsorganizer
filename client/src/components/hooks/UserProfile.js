@@ -200,7 +200,6 @@ const UserProfile = ({children}) => {
         }catch{};
         window.localStorage.setItem("session",JSON.stringify({timelines:profile.maps}));
         if(profile.isLoaded&&profile.user==null){
-            console.log(profile);
             window.localStorage.removeItem("logging off");
         }
     });
