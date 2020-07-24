@@ -19,7 +19,7 @@ class GoogleMap extends Component {
         this.shown={};
         this._isMounted=false;
         this._mapLoaded=false;
-        this.apiKey="AIzaSyAke9H4zbK2xCH8AwMM1RJegQr79b4l02Q";
+        this.apiKey="AIzaSyAWW9H-zCDloCTL_AnTYYXmIQOP08GkFXM";
         this.state={
             current:+window.localStorage.getItem("cur")||0,
         }
