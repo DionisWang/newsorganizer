@@ -143,7 +143,7 @@ color: #999;
   text-align: center;
 }
 .carousel{
-    height:65vh;
+    height:67vh;
 }
 .carousel-item .cards{
   width: 90%;
@@ -189,11 +189,14 @@ color: #999;
   width: 100%;
   height: auto;
   text-align: center;
-  min-height: 188px;
-  max-height: 25vh;
+  min-height: 220px;
+  min-width: 31vw;
+  max-height: 30vh;
   object-fit: cover;
-  vertical-align: middle;
+  object-position: 50% 10%;
   border-style: none;
+  margin-left: 1px;
+  line-height: 99px;
 }
 .card-link{
   overflow: hidden;
@@ -226,6 +229,12 @@ background: none!important;
 .card-container {
   position: relative;
   width: 100%;
+}
+.card-container a{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    height: 100%;  
 }
 .card-container .btn{
   position: absolute;

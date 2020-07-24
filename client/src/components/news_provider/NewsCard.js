@@ -2,66 +2,14 @@ import React from 'react';
 import { Card, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import LongText from './LongText';
 import LazyImage from './LazyImage';
+import {fixTitle, lastUpdated} from '../../utils/help'
 
-function lastUpdated(ms){
-    let sec = Math.floor(ms/1000);
-    let min = Math.floor(sec/60);
-    let hrs = Math.floor(min/60);
-    let days = Math.floor(hrs/24);
-    let months = Math.floor(days/30);
-    let years = Math.floor(months/12);
-    if(sec<60){
-        if(sec===1){
-            return "a second ago";
-        }else{
-            return Math.floor(sec) + " seconds ago";
-        }
-    }else if(min<60){
-        if(min===1){
-            return "a minute ago";
-        }else{
-            return Math.floor(min) + " minutes ago";
-        }
-    }else if(hrs<24){
-        if(hrs===1){
-            return "an hour ago";
-        }else{
-            return Math.floor(hrs) + " hours ago";
-        }
-    }else if(days<30){
-        if(days===1){
-            return "a day ago";
-        }else{
-            return Math.floor(days) + " days ago";
-        }
-    }else if(months<12){
-        if(months===1){
-            return "a month ago";
-        }else{
-            return Math.floor(months) + " months ago";
-        }
-    }else{
-        if(years===1){
-            return "a year ago";
-        }else{
-            return Math.floor(years) + " years ago";
-        }
-    }
-
-}
 
 export default function NewsCard(props) {
     let {a,handleClick,that,ncol} = props;
     let content_lim=200;
-    let titles_list= a.title.split(' - ');
-    let newspaper= titles_list[titles_list.length-1];
-    let fixed_title="";
-    let now = new Date();
-    let pub = new Date(a.publishedAt);
-    let dif = now.getTime()-pub.getTime();
-    for(let i=0; i<titles_list.length-1;i++){
-        fixed_title+=titles_list[i];
-    }
+    
+    let {newspaper,fixed_title}= fixTitle(a.title);
     return (
         <div className={`col-${12/ncol} d-flex align-items-stretch`}>
             <Card itemScope itemType="http://schema.org/Collection">
@@ -87,7 +35,7 @@ export default function NewsCard(props) {
                 </Card.Text>
             </Card.Body>
             <Card.Footer itemProp="datePublished">
-                {lastUpdated(dif)}
+                {lastUpdated(a.publishedAt)}
             </Card.Footer>
             </Card>
         </div>

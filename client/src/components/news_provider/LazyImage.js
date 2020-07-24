@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import fallbackimg from '../../images/fallback-img.png';
 
 export default function LazyImage(props) {
     const imgRef=React.createRef();
@@ -36,6 +37,14 @@ export default function LazyImage(props) {
         }
     })
     return (
-        <img rel="preconnect" className={"card-img"} ref={imgRef} data-src={props.urlToImage} alt={`from ${props.newspaper} for: ${props.fixed_title}`} itemProp="thumbnailUrl"/>            
+        <img rel="preconnect" 
+            className={"card-img"} ref={imgRef} 
+            data-src={props.urlToImage}
+            alt={`Link to ${props.newspaper} article`}
+            onError={(e)=>{
+                e.target.src=fallbackimg
+            }}
+            itemProp="thumbnailUrl"
+        />            
     );
 }

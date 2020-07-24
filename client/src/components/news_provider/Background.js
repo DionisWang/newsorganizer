@@ -3,6 +3,7 @@ import { Carousel, Spinner } from "react-bootstrap";
 import {Context} from '../hooks/UserProfile';
 import AlertPopup from '../AlertPopup';
 import NewsCard from './NewsCard';
+import {removeDupMerge} from '../../utils/help';
 
 class Background extends Component{
     static contextType= Context;
@@ -52,28 +53,19 @@ class Background extends Component{
                 window.removeEventListener("scroll", this.handleScroll);
             }else if(body.articles.length<per){
                 this.setState({
-                    news: this.removeDupMerge(news,body.articles),
+                    news: removeDupMerge(news,body.articles),
                     scrolling: false,
                     offset: per-body.articles.length,
                 });
             }else{
                 this.setState({
-                    news: this.removeDupMerge(news,body.articles),
+                    news: removeDupMerge(news,body.articles),
                     scrolling: false,
                 });
             }
         }catch{}
     };
-    removeDupMerge(a1,a2) {
-        let exists = {};
-        a1.forEach(i=>exists[i._id]=true);
-        a2.forEach(i=>{
-            if(!exists[i._id]){
-                a1.push(i);
-            }
-        });
-        return a1;
-    };
+    
     loadMore = () => {
         if (!this.state.scrolling){
             this.setState(
@@ -174,7 +166,7 @@ class Background extends Component{
         this.mlist={};
         this.nlist.forEach(ele=>this.mlist[ele._id]=true);
         let that=this;
-        let ncol= (this.props.size>=768) ? 3:1;
+        let ncol= (this.props.size>768) ? 3:1;
         let content=[];
         let subcontent=[];
         this.state.news.map((a,c) =>{

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router";
-import { FormControl, Button, Image, Form, InputGroup } from "react-bootstrap";
-import s_icon from '../../../images/search_icon.svg';
+import { FormControl, Button, Form, InputGroup } from "react-bootstrap";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 export default function SearchBar() {
@@ -23,7 +24,7 @@ export default function SearchBar() {
             <FormControl id="search" type="text" placeholder="Search" aria-label="Search" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
             <InputGroup.Append>
                 <Button variant="dark" type = "submit">
-                    <Image alt="search button" src={s_icon} rounded />
+                    <FontAwesomeIcon icon={faSearch}/>
                 </Button>
             </InputGroup.Append>
         </InputGroup>

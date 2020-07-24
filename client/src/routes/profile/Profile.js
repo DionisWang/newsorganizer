@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import {Context} from '../../components/hooks/UserProfile';
-import MapList from '../../components/map_list/MapList';
+import TableManager from '../../components/table/TableManger'
 import { useHistory } from "react-router";
 
 export default function Profile() {
@@ -10,7 +10,7 @@ export default function Profile() {
         return(<>
             <p>Welcome {profile.user.username}!</p>
             <p style={{textAlign:"center"}}>List of Timelines</p>
-            <MapList/>
+            <TableManager/>
         </>);
     }
     function notLoggedIn(){
