@@ -19,7 +19,7 @@ class GoogleMap extends Component {
         this.shown={};
         this._isMounted=false;
         this._mapLoaded=false;
-        this.apiKey="AIzaSyAWW9H-zCDloCTL_AnTYYXmIQOP08GkFXM";
+        this.apiKey="AIzaSyAke9H4zbK2xCH8AwMM1RJegQr79b4l02Q";
         this.state={
             current:+window.localStorage.getItem("cur")||0,
         }
@@ -60,7 +60,7 @@ class GoogleMap extends Component {
         script.addEventListener("load", ()=>{
             gmap= window.google.maps;
             gmap.InfoWindow.prototype.isOpen = function(){
-                var map = that.getMap();
+                var map = this.getMap();
                 return (map !== null && typeof map !== "undefined");
             }
             that.googleMap = that.createGoogleMap();
