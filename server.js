@@ -123,7 +123,6 @@ connectDb().then(async () => {
     ]);
     //createUsersWithMessages();
     */
-    models.News.createIndex({ publishedAt: 1 })
     let news = await models.News.find({ title: { $regex: "", $options: "i" } }).sort({publishedAt: -1});
     news.forEach(article=>{
         if(!article.urlToImage){
