@@ -25,12 +25,14 @@
         "mongoose": "^5.9.0",
         "nodemon": "^2.0.2",
         "ssl-express-www": "^3.0.7",
-        "uuid": "^3.4.0"
+        "uuid": "^3.4.0",
+        "follow-redirects": ">=1.14.8"
     },
     "engines": {
         "node": "12.14.1"
     },
     "devDependencies": {
-        "concurrently": "^5.2.0"
+        "concurrently": "^5.2.0",
+        "follow-redirects": ">=1.14.8"
     }
 }
