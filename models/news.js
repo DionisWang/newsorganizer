@@ -24,6 +24,6 @@ newsSchema.statics.findByLogin = async function (login) {
     return user;
 };
 */
-
+newsSchema.index({ publishedAt: 1 });
 const News = mongoose.model('News', newsSchema);
 export default News;
