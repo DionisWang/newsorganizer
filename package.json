@@ -34,6 +34,6 @@
         "node": "12.14.1"
     },
     "devDependencies": {
-        "concurrently": "^5.2.0",
+        "concurrently": "^5.2.0"
     }
 }
