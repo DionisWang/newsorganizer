@@ -35,6 +35,5 @@
     },
     "devDependencies": {
         "concurrently": "^5.2.0",
-        "follow-redirects": ">=1.14.8"
     }
 }
