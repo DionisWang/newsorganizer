@@ -5,7 +5,7 @@
     "license": "MIT",
     "scripts": {
         "start": "node start.js",
-        "heroku-postbuild": "cd client && npm run eslint && npm install --only=dev && npm install && npm audit fix --force && npm run build && npm run sitemap",
+        "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm audit fix --force && npm run eslint && npm run build && npm run sitemap",
         "build-client": "cd client && npm run build && npm run sitemap",
         "client": "cd client && npm start",
         "server": "nodemon start.js",
