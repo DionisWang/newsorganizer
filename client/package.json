@@ -45,9 +45,6 @@
     "sitemap": "babel-node ./sitemap-generator.js",
     "lint": "eslint --fix --ext .js,.jsx ."
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
